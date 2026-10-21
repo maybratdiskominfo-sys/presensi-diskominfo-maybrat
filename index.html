@@ -6,7 +6,7 @@
     <title>Sistem Presensi Digital - Diskominfo Kabupaten Maybrat</title>
     <meta
       name="description"
-      content="Presensi Digital Berbasis QR Code Terintegrasi Google Sheets Diskominfo Kab. Maybrat"
+      content="Presensi Digital Berbasis QR Code & Geofencing GPS Terintegrasi Google Sheets Diskominfo Kab. Maybrat"
     />
 
     <!-- Tailwind CSS CDN -->
@@ -109,103 +109,140 @@
           <div>
             <div class="flex items-center gap-2">
               <span
-                class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                class="text-[10px] font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30"
                 >PAPUA BARAT DAYA</span
               >
               <span
-                class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                class="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30"
                 >KUMURKEK</span
               >
             </div>
             <h1
-              class="text-base sm:text-lg font-bold text-white tracking-wide leading-tight"
+              class="text-base sm:text-lg font-black text-white tracking-tight"
             >
               DINAS KOMUNIKASI DAN INFORMATIKA
             </h1>
             <p class="text-xs text-amber-400 font-medium">
-              Kabupaten Maybrat - Sistem Presensi Digital Terpadu
+              Sistem Presensi Digital Terpadu • Diskominfo Kabupaten Maybrat
             </p>
           </div>
         </div>
 
-        <!-- Realtime WIT Clock & User Nav -->
-        <div class="flex items-center gap-4">
+        <!-- Realtime WIT Clock & User Status -->
+        <div class="flex items-center gap-3 sm:gap-4">
+          <!-- WIT Clock -->
           <div
-            class="bg-slate-800/80 border border-slate-700/60 rounded-xl px-4 py-1.5 flex items-center gap-3 shadow-inner"
+            class="bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-1.5 flex items-center gap-2.5"
           >
             <div
               class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"
             ></div>
             <div>
               <div
-                id="wit-time"
-                class="text-sm font-mono font-bold text-amber-400"
+                id="live-wit-clock"
+                class="text-xs sm:text-sm font-mono font-bold text-amber-400"
               >
-                --:--:-- WIT
+                00:00:00 WIT
               </div>
-              <div id="wit-date" class="text-[11px] text-slate-400">
-                Loading date...
+              <div
+                id="live-wit-date"
+                class="text-[10px] text-slate-400 font-medium"
+              >
+                -
               </div>
             </div>
           </div>
 
-          <div id="auth-actions" class="flex items-center gap-2"></div>
+          <!-- User Profile Pill -->
+          <div
+            id="header-user-pill"
+            class="hidden items-center gap-3 pl-3 border-l border-slate-800"
+          >
+            <div class="text-right">
+              <div id="header-user-name" class="text-xs font-bold text-white">
+                Nama Pegawai
+              </div>
+              <div
+                id="header-user-role"
+                class="text-[10px] text-amber-400 font-semibold"
+              >
+                Pegawai
+              </div>
+            </div>
+            <button
+              onclick="handleLogout()"
+              class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span class="hidden sm:inline">Keluar</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>
 
     <!-- MAIN CONTAINER -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
-      <!-- NOTIFIKASI TOAST -->
-      <div
-        id="toast"
-        class="fixed top-20 right-4 z-50 transform translate-x-full transition-transform duration-300 max-w-md"
-      ></div>
-
-      <!-- VIEW: LOGIN -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+      <!-- VIEW: LOGIN PAGE -->
       <div
         id="view-login"
-        class="max-w-md mx-auto my-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl"
+        class="max-w-md mx-auto my-6 sm:my-12 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden"
       >
+        <div
+          class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"
+        ></div>
+
         <div class="text-center mb-6">
           <div
-            class="w-16 h-16 mx-auto mb-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-400 text-3xl"
+            class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-tr from-amber-500 to-blue-600 p-0.5 shadow-lg shadow-amber-500/20 flex items-center justify-center"
           >
-            <i class="fa-solid fa-fingerprint"></i>
+            <div
+              class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-amber-400 text-2xl"
+            >
+              <i class="fa-solid fa-fingerprint"></i>
+            </div>
           </div>
-          <h2 class="text-xl font-bold text-white">Masuk Sistem Presensi</h2>
+          <h2 class="text-xl font-black text-white">
+            Autentikasi Presensi Digital
+          </h2>
           <p class="text-xs text-slate-400 mt-1">
-            Diskominfo Maybrat • Verifikasi Ganda (Email & PIN Keamanan)
+            Diskominfo Kabupaten Maybrat • Papua Barat Daya
           </p>
 
           <div
             id="login-conn-indicator"
-            class="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30"
+            class="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-950 border border-slate-800 text-slate-400"
           >
-            <i class="fa-solid fa-cloud"></i>
-            <span id="conn-status-text">Memeriksa Koneksi Database...</span>
+            <span
+              class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"
+            ></span>
+            <span id="conn-status-text"
+              >Koneksi Database: DATABASE_PRESENSI_DISKOMINFO_MAYBRAT</span
+            >
           </div>
         </div>
 
+        <!-- Alert Message -->
         <div
-          id="login-error-box"
-          class="hidden mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 text-xs flex items-start gap-2"
-        >
-          <i class="fa-solid fa-circle-exclamation mt-0.5 text-red-400"></i>
-          <div id="login-error-text" class="leading-relaxed"></div>
-        </div>
+          id="login-alert"
+          class="hidden mb-4 p-3 rounded-xl text-xs flex items-start gap-2"
+        ></div>
 
-        <form id="form-login" class="space-y-4">
+        <!-- Login Form -->
+        <form
+          id="form-login"
+          onsubmit="handleLoginSubmit(event)"
+          class="space-y-4"
+        >
           <div>
-            <label
-              class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5"
-              >Email Pegawai / Admin</label
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5"
+              >Email Pegawai Terdaftar</label
             >
             <div class="relative">
               <span
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500"
+                class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500"
               >
-                <i class="fa-solid fa-envelope"></i>
+                <i class="fa-regular fa-envelope"></i>
               </span>
               <input
                 type="email"
@@ -219,17 +256,16 @@
 
           <div>
             <div class="flex items-center justify-between mb-1.5">
-              <label
-                class="block text-xs font-semibold uppercase tracking-wider text-slate-300"
-                >PIN Keamanan (6 Digit)</label
+              <label class="block text-xs font-semibold text-slate-300"
+                >PIN / Kata Sandi</label
               >
-              <span class="text-[10px] text-amber-400 font-mono"
+              <span class="text-[10px] text-slate-400 font-mono"
                 >Default: 123456</span
               >
             </div>
             <div class="relative">
               <span
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500"
+                class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500"
               >
                 <i class="fa-solid fa-key"></i>
               </span>
@@ -248,13 +284,14 @@
           <button
             type="submit"
             id="btn-submit-login"
-            class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+            class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span id="btn-login-text">Verifikasi & Masuk</span>
             <i id="btn-login-icon" class="fa-solid fa-arrow-right"></i>
           </button>
         </form>
 
+        <!-- Quick Demo Accounts -->
         <div class="mt-6 pt-5 border-t border-slate-800/80">
           <div
             class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 text-center"
@@ -288,11 +325,11 @@
         </div>
       </div>
 
-      <!-- VIEW: ADMIN PANEL -->
+      <!-- VIEW: ADMIN DASHBOARD -->
       <div id="view-admin" class="hidden space-y-6">
-        <!-- Admin Subheader -->
+        <!-- Admin Subheader & Live Sync Toolbar -->
         <div
-          class="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700/60 rounded-2xl p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4"
+          class="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700/60 rounded-3xl p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl"
         >
           <div>
             <div class="flex items-center gap-2 mb-1">
@@ -303,106 +340,167 @@
               </span>
               <span class="text-xs text-slate-400">Diskominfo Maybrat</span>
             </div>
-            <h2 class="text-2xl font-bold text-white">
-              Dashboard Pengelolaan Presensi
+            <h2 class="text-xl sm:text-2xl font-black text-white">
+              Dashboard Monitoring Presensi & Izin
             </h2>
-            <p class="text-sm text-slate-400">
-              Sinkronisasi Database Google Sheets:
+            <p class="text-xs text-slate-400 mt-1">
+              Google Sheets Database:
               <code class="text-amber-400 font-mono"
                 >DATABASE_PRESENSI_DISKOMINFO_MAYBRAT</code
               >
             </p>
           </div>
 
-          <!-- Admin Tabs -->
-          <div
-            class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800"
-          >
-            <button
-              onclick="switchAdminTab('rekap')"
-              id="tab-btn-rekap"
-              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-amber-500 text-slate-950 transition-all flex items-center gap-2"
+          <!-- Sync & Auto Polling Bar -->
+          <div class="flex flex-wrap items-center gap-3">
+            <div
+              class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 flex items-center gap-2 text-xs"
             >
-              <i class="fa-solid fa-chart-column"></i> Rekap Presensi
-            </button>
+              <span class="text-slate-400">Auto-Polling:</span>
+              <button
+                id="btn-toggle-autopoll"
+                onclick="toggleAutoPolling()"
+                class="px-2 py-0.5 rounded font-bold text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+              >
+                Aktif (30s)
+              </button>
+            </div>
+
             <button
-              onclick="switchAdminTab('kantor')"
-              id="tab-btn-kantor"
-              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-2"
+              onclick="triggerManualSync()"
+              id="btn-manual-sync"
+              class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-2 shadow-lg shadow-blue-900/30 cursor-pointer"
             >
-              <i class="fa-solid fa-qrcode"></i> QR Kantor
-            </button>
-            <button
-              onclick="switchAdminTab('pegawai')"
-              id="tab-btn-pegawai"
-              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-2"
-            >
-              <i class="fa-solid fa-users"></i> Pegawai
+              <i id="sync-spinner-icon" class="fa-solid fa-rotate"></i>
+              <span>Sinkron Google Sheets</span>
             </button>
           </div>
+        </div>
+
+        <!-- Admin Tabs Navigation -->
+        <div
+          class="flex items-center gap-2 border-b border-slate-800 pb-2 overflow-x-auto"
+        >
+          <button
+            onclick="switchAdminTab('rekap')"
+            id="tab-btn-rekap"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 shadow-md shadow-amber-500/20 whitespace-nowrap"
+          >
+            <i class="fa-solid fa-chart-column"></i> Rekap Presensi
+          </button>
+          <button
+            onclick="switchAdminTab('izin')"
+            id="tab-btn-izin"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-slate-800 whitespace-nowrap"
+          >
+            <i class="fa-solid fa-file-signature"></i> Rekap Izin / Cuti
+            <span
+              id="badge-izin-pending"
+              class="hidden px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black"
+              >0</span
+            >
+          </button>
+          <button
+            onclick="switchAdminTab('kantor')"
+            id="tab-btn-kantor"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-slate-800 whitespace-nowrap"
+          >
+            <i class="fa-solid fa-qrcode"></i> Manajemen Kantor & QR
+          </button>
+          <button
+            onclick="switchAdminTab('pegawai')"
+            id="tab-btn-pegawai"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-slate-800 whitespace-nowrap"
+          >
+            <i class="fa-solid fa-users"></i> Pegawai
+          </button>
+          <button
+            onclick="switchToPegawaiView()"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-blue-600/30 text-blue-400 hover:text-blue-300 transition-all flex items-center gap-2 border border-blue-500/30 whitespace-nowrap"
+          >
+            <i class="fa-solid fa-camera"></i> Uji Scanner Pegawai
+          </button>
         </div>
 
         <!-- TAB 1: REKAP PRESENSI ALL PEGAWAI -->
         <div id="admin-tab-rekap" class="space-y-6">
           <!-- Stats Cards -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-              <div class="text-xs font-semibold text-slate-400">
-                Total Presensi Hari Ini
+            <div
+              class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg"
+            >
+              <div
+                class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+              >
+                Total Hari Ini
               </div>
               <div
                 id="stat-today-total"
-                class="text-2xl font-bold text-white mt-1"
-              >
-                0
-              </div>
-              <div class="text-[11px] text-emerald-400 mt-1">
-                <i class="fa-solid fa-circle-check"></i> Aktif tercatat
-              </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-              <div class="text-xs font-semibold text-slate-400">
-                Presensi Masuk
-              </div>
-              <div
-                id="stat-today-masuk"
-                class="text-2xl font-bold text-blue-400 mt-1"
-              >
-                0
-              </div>
-              <div class="text-[11px] text-slate-400 mt-1">Masuk Kantor</div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-              <div class="text-xs font-semibold text-slate-400">
-                Presensi Pulang
-              </div>
-              <div
-                id="stat-today-pulang"
-                class="text-2xl font-bold text-amber-400 mt-1"
-              >
-                0
-              </div>
-              <div class="text-[11px] text-slate-400 mt-1">Pulang Kerja</div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-              <div class="text-xs font-semibold text-slate-400">
-                Total Pegawai Terdaftar
-              </div>
-              <div
-                id="stat-total-pegawai"
-                class="text-2xl font-bold text-purple-400 mt-1"
+                class="text-2xl sm:text-3xl font-black text-white mt-1"
               >
                 0
               </div>
               <div class="text-[11px] text-slate-400 mt-1">
-                Diskominfo Maybrat
+                Presensi tercatat di Kumurkek
               </div>
+            </div>
+            <div
+              class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg"
+            >
+              <div
+                class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+              >
+                Presensi Masuk
+              </div>
+              <div
+                id="stat-today-masuk"
+                class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1"
+              >
+                0
+              </div>
+              <div id="stat-late-count" class="text-[11px] text-slate-400 mt-1">
+                Tepat waktu
+              </div>
+            </div>
+            <div
+              class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg"
+            >
+              <div
+                class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+              >
+                Presensi Pulang
+              </div>
+              <div
+                id="stat-today-pulang"
+                class="text-2xl sm:text-3xl font-black text-blue-400 mt-1"
+              >
+                0
+              </div>
+              <div class="text-[11px] text-slate-400 mt-1">
+                Selesai jam kerja
+              </div>
+            </div>
+            <div
+              class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg"
+            >
+              <div
+                class="text-xs font-bold text-slate-400 uppercase tracking-wider"
+              >
+                Total Pegawai
+              </div>
+              <div
+                id="stat-total-pegawai"
+                class="text-2xl sm:text-3xl font-black text-purple-400 mt-1"
+              >
+                0
+              </div>
+              <div class="text-[11px] text-slate-400 mt-1">Sheet Pegawai</div>
             </div>
           </div>
 
           <!-- Filter & Search Toolbar -->
           <div
-            class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-wrap items-center justify-between gap-4"
+            class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4"
           >
             <div class="flex flex-wrap items-center gap-3">
               <div>
@@ -413,7 +511,7 @@
                   type="date"
                   id="filter-rekap-date"
                   onchange="renderRekapTable()"
-                  class="bg-slate-800 border border-slate-700 text-xs text-white rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  class="bg-slate-800 border border-slate-700 text-xs text-white rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 font-mono"
                 />
               </div>
               <div>
@@ -430,676 +528,838 @@
                   <option value="Pulang">Pulang</option>
                 </select>
               </div>
-              <div>
-                <label class="text-[11px] text-slate-400 block mb-1"
-                  >Cari Pegawai / Email</label
-                >
-                <input
-                  type="text"
-                  id="filter-rekap-search"
-                  oninput="renderRekapTable()"
-                  placeholder="Ketik nama / email..."
-                  class="bg-slate-800 border border-slate-700 text-xs text-white rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 w-48"
-                />
-              </div>
             </div>
 
             <div class="flex items-center gap-2">
-              <button
-                onclick="fetchSyncAllData()"
-                class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5"
-              >
-                <i class="fa-solid fa-arrows-rotate"></i> Sinkron Google Sheets
-              </button>
+              <input
+                type="text"
+                id="search-rekap"
+                onkeyup="renderRekapTable()"
+                placeholder="Cari pegawai..."
+                class="bg-slate-800 border border-slate-700 text-xs text-white rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 w-48 sm:w-60"
+              />
               <button
                 onclick="exportRekapCSV()"
-                class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
               >
-                <i class="fa-solid fa-file-excel"></i> Ekspor CSV
+                <i class="fa-solid fa-file-csv"></i> CSV
               </button>
               <button
                 onclick="window.print()"
-                class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border border-slate-700"
               >
-                <i class="fa-solid fa-print"></i> Cetak Rekap
+                <i class="fa-solid fa-print"></i> Cetak
               </button>
             </div>
           </div>
 
-          <!-- Table Presensi -->
+          <!-- Presensi Table -->
           <div
-            class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl"
+            class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl"
           >
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs text-slate-300">
+              <table class="w-full text-left text-xs">
                 <thead
-                  class="bg-slate-800/80 uppercase tracking-wider text-slate-400 border-b border-slate-800"
+                  class="bg-slate-950 text-slate-400 uppercase font-bold tracking-wider text-[10px] border-b border-slate-800"
                 >
                   <tr>
-                    <th class="py-3 px-4">No</th>
-                    <th class="py-3 px-4">ID Presensi</th>
+                    <th class="py-3 px-4">Tipe & ID</th>
                     <th class="py-3 px-4">Pegawai</th>
-                    <th class="py-3 px-4">Email</th>
-                    <th class="py-3 px-4">ID / Nama Kantor</th>
-                    <th class="py-3 px-4">Tanggal</th>
-                    <th class="py-3 px-4">Waktu (WIT)</th>
-                    <th class="py-3 px-4">Tipe</th>
+                    <th class="py-3 px-4">Tanggal & Waktu (WIT)</th>
+                    <th class="py-3 px-4">Status Kehadiran</th>
+                    <th class="py-3 px-4">Titik Kantor</th>
+                    <th class="py-3 px-4">Jarak GPS</th>
                   </tr>
                 </thead>
                 <tbody
-                  id="table-rekap-body"
-                  class="divide-y divide-slate-800/60"
+                  id="rekap-table-body"
+                  class="divide-y divide-slate-800/80 font-medium"
                 ></tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- TAB 2: MANAJEMEN KANTOR & GENERATOR QR CODE -->
-        <div
-          id="admin-tab-kantor"
-          class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6"
-        >
-          <!-- Form Tambah Kantor -->
+        <!-- TAB 2: REKAP IZIN / SAKIT / CUTI -->
+        <div id="admin-tab-izin" class="hidden space-y-6">
           <div
-            class="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-xl space-y-4"
+            class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4"
           >
             <div class="flex items-center gap-2">
-              <div
-                class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold"
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-file-signature text-purple-400"></i>
+                <span>Daftar Pengajuan Ketidakhadiran (Sheet: Izin)</span>
+              </h3>
+            </div>
+            <button
+              onclick="exportIzinCSV()"
+              class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-file-csv"></i> CSV
+            </button>
+          </div>
+
+          <div
+            class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead
+                  class="bg-slate-950 text-slate-400 uppercase font-bold tracking-wider text-[10px] border-b border-slate-800"
+                >
+                  <tr>
+                    <th class="py-3 px-4">Pegawai</th>
+                    <th class="py-3 px-4">Jenis & Tanggal</th>
+                    <th class="py-3 px-4">Keterangan / Alasan</th>
+                    <th class="py-3 px-4">Status Approval</th>
+                    <th class="py-3 px-4 text-center">Aksi Persetujuan</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="izin-table-body"
+                  class="divide-y divide-slate-800/80 font-medium"
+                ></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: MANAJEMEN KANTOR & QR -->
+        <div id="admin-tab-kantor" class="hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div
+              class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4"
+            >
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-plus text-amber-400"></i> Tambah /
+                Perbarui Kantor
+              </h3>
+              <form
+                id="form-kantor"
+                onsubmit="handleSaveKantor(event)"
+                class="space-y-3 text-xs"
               >
-                <i class="fa-solid fa-plus"></i>
+                <div>
+                  <label class="block text-slate-400 mb-1">ID Kantor</label>
+                  <input
+                    type="text"
+                    id="kantor-id"
+                    placeholder="KTR-DISKOMINFO-04"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1"
+                    >Nama Kantor / Titik Presensi</label
+                  >
+                  <input
+                    type="text"
+                    id="kantor-nama"
+                    placeholder="Kantor Diskominfo Kumurkek"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Alamat Kantor</label>
+                  <textarea
+                    id="kantor-alamat"
+                    rows="2"
+                    placeholder="Kompleks Kantor Bupati Maybrat"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
+                  ></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      id="kantor-lat"
+                      value="-0.5512"
+                      required
+                      class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      id="kantor-lng"
+                      value="132.4512"
+                      required
+                      class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1"
+                    >Radius Toleransi (Meter)</label
+                  >
+                  <input
+                    type="number"
+                    id="kantor-radius"
+                    value="100"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl transition-all"
+                >
+                  Simpan & Generate QR Code
+                </button>
+              </form>
+            </div>
+
+            <div
+              class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4"
+            >
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-list text-amber-400"></i> Daftar Titik
+                Presensi & QR Code
+              </h3>
+              <div
+                id="kantor-cards-container"
+                class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: PEGAWAI -->
+        <div id="admin-tab-pegawai" class="hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div
+              class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4"
+            >
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-amber-400"></i> Tambah
+                Pegawai
+              </h3>
+              <form
+                id="form-pegawai"
+                onsubmit="handleSavePegawai(event)"
+                class="space-y-3 text-xs"
+              >
+                <div>
+                  <label class="block text-slate-400 mb-1">ID Pegawai</label>
+                  <input
+                    type="text"
+                    id="pegawai-id"
+                    placeholder="PEG-005"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono"
+                  />
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Nama Lengkap</label>
+                  <input
+                    type="text"
+                    id="pegawai-nama"
+                    placeholder="Nama & Gelar"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
+                  />
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Email Pegawai</label>
+                  <input
+                    type="email"
+                    id="pegawai-email"
+                    placeholder="pegawai@maybratkab.go.id"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
+                  />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-slate-400 mb-1">Role</label>
+                    <select
+                      id="pegawai-role"
+                      class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
+                    >
+                      <option value="Pegawai">Pegawai</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Status</label>
+                    <select
+                      id="pegawai-status"
+                      class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
+                    >
+                      <option value="Aktif">Aktif</option>
+                      <option value="Nonaktif">Nonaktif</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1">Jabatan</label>
+                  <input
+                    type="text"
+                    id="pegawai-jabatan"
+                    placeholder="Staf Diskominfo"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
+                  />
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1"
+                    >PIN Login (6 Digit)</label
+                  >
+                  <input
+                    type="password"
+                    maxlength="6"
+                    id="pegawai-pin"
+                    value="123456"
+                    required
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all"
+                >
+                  Simpan Pegawai ke Sheets
+                </button>
+              </form>
+            </div>
+
+            <div
+              class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl"
+            >
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead
+                    class="bg-slate-950 text-slate-400 uppercase font-bold tracking-wider text-[10px] border-b border-slate-800"
+                  >
+                    <tr>
+                      <th class="py-3 px-4">ID & Nama</th>
+                      <th class="py-3 px-4">Email</th>
+                      <th class="py-3 px-4">Jabatan</th>
+                      <th class="py-3 px-4">Role</th>
+                      <th class="py-3 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="pegawai-table-body"
+                    class="divide-y divide-slate-800/80 font-medium"
+                  ></tbody>
+                </table>
               </div>
-              <div>
-                <h3 class="text-sm font-bold text-white">
-                  Tambah Titik Kantor Baru
-                </h3>
-                <p class="text-xs text-slate-400">
-                  Generate QR Code otomatis untuk ditempel
-                </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: PEGAWAI PANEL -->
+      <div id="view-pegawai" class="hidden space-y-6">
+        <!-- Pegawai Banner -->
+        <div
+          class="bg-gradient-to-r from-slate-900 via-blue-950/40 to-slate-900 border border-blue-500/30 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-wrap items-center justify-between gap-4"
+        >
+          <div class="flex items-center gap-4">
+            <div
+              class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-blue-600 p-0.5 shadow-lg flex items-center justify-center"
+            >
+              <div
+                class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-amber-400 text-xl font-bold"
+              >
+                <i class="fa-solid fa-user"></i>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span
+                  class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                  >PEGAWAI DISKOMINFO</span
+                >
+                <span
+                  id="pegawai-badge-id"
+                  class="text-xs text-slate-400 font-mono"
+                  >PEG-002</span
+                >
+              </div>
+              <h2
+                id="pegawai-badge-name"
+                class="text-xl sm:text-2xl font-black text-white"
+              >
+                Yohanes B. Way, S.Kom
+              </h2>
+              <p
+                id="pegawai-badge-jabatan"
+                class="text-xs text-slate-300 font-medium"
+              >
+                Pranata Komputer Ahli Muda
+              </p>
+            </div>
+          </div>
+
+          <!-- Status Presensi Hari Ini -->
+          <div
+            class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-right"
+          >
+            <div
+              class="text-[10px] text-slate-400 font-bold uppercase tracking-wider"
+            >
+              Status Presensi Hari Ini
+            </div>
+            <div
+              id="pegawai-today-status"
+              class="text-xs sm:text-sm font-bold text-amber-400 mt-1"
+            >
+              <i class="fa-regular fa-clock mr-1"></i> Belum Presensi Masuk
+            </div>
+            <div class="text-[10px] text-slate-500 mt-0.5">
+              Jam Masuk: 08:00 WIT • Jam Pulang: 16:00 WIT
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub Tabs Pegawai: [ Presensi QR & GPS ] | [ Ajukan Izin / Cuti ] | [ Riwayat Saya ] -->
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+          <button
+            onclick="switchPegawaiTab('presensi')"
+            id="ptab-btn-presensi"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 shadow-md"
+          >
+            <i class="fa-solid fa-camera"></i> Pemindai QR & Presensi GPS
+          </button>
+          <button
+            onclick="switchPegawaiTab('izin')"
+            id="ptab-btn-izin"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-slate-800"
+          >
+            <i class="fa-solid fa-file-signature"></i> Pengajuan Izin / Cuti
+          </button>
+          <button
+            onclick="switchPegawaiTab('riwayat')"
+            id="ptab-btn-riwayat"
+            class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-slate-800"
+          >
+            <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Saya
+          </button>
+        </div>
+
+        <!-- SUBTAB 1: SCANNER & GPS -->
+        <div
+          id="pegawai-subtab-presensi"
+          class="grid grid-cols-1 lg:grid-cols-12 gap-6"
+        >
+          <!-- Kolom Kamera (html5-qrcode) -->
+          <div
+            class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between space-y-4"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"
+                  ></span>
+                  <h3
+                    class="text-base font-bold text-white flex items-center gap-1.5"
+                  >
+                    <i class="fa-solid fa-camera text-amber-400"></i>
+                    <span>Pemindai Kamera QR Code Kantor</span>
+                  </h3>
+                </div>
+                <span
+                  class="text-[11px] px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700"
+                  >Aktif Otomatis</span
+                >
+              </div>
+
+              <p class="text-xs text-slate-400 mb-4">
+                Arahkan kamera ke QR Code resmi kantor Diskominfo Maybrat di
+                dinding/meja kantor.
+              </p>
+
+              <div
+                class="relative w-full aspect-square max-w-sm mx-auto bg-slate-950 rounded-2xl overflow-hidden border-2 border-slate-800 shadow-2xl flex items-center justify-center"
+              >
+                <div id="html5-scanner-viewport" class="w-full h-full"></div>
+                <div
+                  class="absolute inset-4 pointer-events-none border border-dashed border-amber-400/40 rounded-xl flex items-center justify-center"
+                >
+                  <div
+                    class="w-full h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent scanner-laser opacity-90 shadow-[0_0_15px_#f59e0b]"
+                  ></div>
+                </div>
+              </div>
+
+              <div
+                id="camera-error-banner"
+                class="hidden mt-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-300 text-xs"
+              ></div>
+
+              <div class="mt-4 flex items-center justify-center gap-2">
+                <button
+                  onclick="startPegawaiScanner()"
+                  class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-camera"></i> Buka Kamera
+                </button>
+                <button
+                  onclick="stopPegawaiScanner()"
+                  class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-700"
+                >
+                  <i class="fa-solid fa-pause"></i> Jeda Kamera
+                </button>
               </div>
             </div>
 
-            <form id="form-kantor" class="space-y-3">
-              <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >ID Kantor</label
+            <!-- Quick Test Buttons -->
+            <div class="pt-4 border-t border-slate-800/80">
+              <div
+                class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2"
+              >
+                Simulasi Scan Titik Kantor:
+              </div>
+              <div
+                id="pegawai-quick-kantor-buttons"
+                class="flex flex-wrap gap-2"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Kolom Kanan: Geofencing GPS & Tombol Presensi Cerdas -->
+          <div class="lg:col-span-5 space-y-4">
+            <div
+              class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4"
+            >
+              <div class="flex items-center justify-between">
+                <span
+                  class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5"
                 >
-                <input
-                  type="text"
-                  id="kantor-id"
-                  required
-                  placeholder="Contoh: KTR-DISKOMINFO-04"
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs font-mono focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                />
-                <p class="text-[10px] text-slate-500 mt-1">
-                  ID ini otomatis menjadi payload QR Code scanner.
+                  <i class="fa-solid fa-location-crosshairs"></i> Validasi
+                  Geofencing GPS
+                </span>
+                <button
+                  onclick="toggleGpsSimulation()"
+                  id="btn-toggle-gps-sim"
+                  class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40"
+                >
+                  Simulasi Kumurkek (Aktif)
+                </button>
+              </div>
+
+              <!-- Detail Kantor Terdeteksi & Jarak GPS -->
+              <div
+                id="box-detected-kantor"
+                class="p-4 rounded-2xl bg-slate-950/80 border border-dashed border-slate-800 text-center space-y-1"
+              >
+                <div class="text-xs font-bold text-slate-400">
+                  Belum Ada QR Kantor Terpindai
+                </div>
+                <p class="text-[11px] text-slate-500">
+                  Pindai QR kantor untuk menghitung jarak GPS ke kantor.
                 </p>
               </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >Nama Kantor / Unit Kerja</label
+
+              <!-- GPS Distance Badge -->
+              <div
+                id="box-gps-distance"
+                class="hidden p-3 rounded-2xl border flex items-center justify-between"
+              >
+                <div>
+                  <div id="gps-dist-text" class="text-xs font-bold">
+                    Jarak ke Kantor: -
+                  </div>
+                  <div class="text-[10px] text-slate-400">
+                    Maksimal radius kantor: 100 meter
+                  </div>
+                </div>
+                <span
+                  id="gps-dist-badge"
+                  class="text-xs font-black px-2 py-0.5 rounded-md"
+                  >VALID</span
                 >
-                <input
-                  type="text"
-                  id="kantor-nama"
-                  required
-                  placeholder="Contoh: Kantor Diskominfo Maybrat"
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                />
               </div>
+
+              <!-- Status Alert Message -->
+              <div
+                id="pegawai-action-alert"
+                class="hidden p-3 rounded-xl text-xs"
+              ></div>
+
+              <!-- Tombol Presensi Cerdas -->
+              <div class="space-y-3 pt-2">
+                <div>
+                  <button
+                    onclick="submitPegawaiPresensi('Masuk')"
+                    id="btn-presensi-masuk"
+                    disabled
+                    class="w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-gradient-to-r from-emerald-600 to-emerald-500 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span id="text-presensi-masuk"
+                      >Presensi Masuk (Jam 08:00 WIT)</span
+                    >
+                  </button>
+                </div>
+
+                <div>
+                  <button
+                    onclick="submitPegawaiPresensi('Pulang')"
+                    id="btn-presensi-pulang"
+                    disabled
+                    class="w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-500 text-slate-950 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span id="text-presensi-pulang"
+                      >Presensi Pulang (Terkunci Sebelum Masuk)</span
+                    >
+                  </button>
+                  <div class="mt-2 text-center">
+                    <label
+                      class="inline-flex items-center gap-1.5 text-[11px] text-amber-400 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        id="check-early-departure"
+                        onchange="handleEarlyDepartureChange()"
+                        class="rounded text-amber-500"
+                      />
+                      <span
+                        >Izin Pulang Awal / Tugas Luar Kedinasan Khusus</span
+                      >
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBTAB 2: PENGAJUAN IZIN / SAKIT / CUTI -->
+        <div
+          id="pegawai-subtab-izin"
+          class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6"
+        >
+          <div
+            class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4"
+          >
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-file-pen text-amber-400"></i> Form Pengajuan
+              Ketidakhadiran
+            </h3>
+            <form
+              onsubmit="handlePengajuanIzinSubmit(event)"
+              class="space-y-4 text-xs"
+            >
               <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >Alamat Lengkap</label
+                <label
+                  class="block font-bold text-slate-400 uppercase tracking-wider mb-1.5"
+                  >Jenis Pengajuan:</label
+                >
+                <div class="grid grid-cols-3 gap-2">
+                  <label
+                    class="p-2.5 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:border-amber-400"
+                  >
+                    <input
+                      type="radio"
+                      name="radio-jenis-izin"
+                      value="Izin"
+                      checked
+                      class="text-amber-500"
+                    />
+                    <span class="font-bold text-white">Izin</span>
+                  </label>
+                  <label
+                    class="p-2.5 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:border-amber-400"
+                  >
+                    <input
+                      type="radio"
+                      name="radio-jenis-izin"
+                      value="Sakit"
+                      class="text-amber-500"
+                    />
+                    <span class="font-bold text-white">Sakit</span>
+                  </label>
+                  <label
+                    class="p-2.5 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:border-amber-400"
+                  >
+                    <input
+                      type="radio"
+                      name="radio-jenis-izin"
+                      value="Cuti"
+                      class="text-amber-500"
+                    />
+                    <span class="font-bold text-white">Cuti</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block font-bold text-slate-400 mb-1"
+                    >Tanggal Mulai:</label
+                  >
+                  <input
+                    type="date"
+                    id="izin-tgl-mulai"
+                    required
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-white font-mono"
+                  />
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-400 mb-1"
+                    >Tanggal Selesai:</label
+                  >
+                  <input
+                    type="date"
+                    id="izin-tgl-selesai"
+                    required
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-white font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-bold text-slate-400 mb-1"
+                  >Alasan / Keterangan Lengkap:</label
                 >
                 <textarea
-                  id="kantor-alamat"
-                  rows="2"
+                  id="izin-keterangan"
+                  rows="3"
                   required
-                  placeholder="Alamat atau lokasi gedung..."
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                  placeholder="Jelaskan alasan ketidakhadiran Anda..."
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-amber-400 resize-none"
                 ></textarea>
               </div>
 
+              <div
+                id="izin-alert-msg"
+                class="hidden p-3 rounded-xl text-xs"
+              ></div>
+
               <button
                 type="submit"
-                class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition-all flex items-center justify-center gap-2"
+                id="btn-kirim-izin"
+                class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
               >
-                <i class="fa-solid fa-floppy-disk"></i> Simpan & Generate QR
+                <i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan ke Admin
               </button>
             </form>
           </div>
 
-          <!-- Daftar Kantor & QR Code Preview -->
-          <div class="lg:col-span-2 space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-building text-amber-400"></i>
-                Daftar Titik Kantor & QR Code Terdaftar
-              </h3>
-              <span
-                id="badge-total-kantor"
-                class="text-xs bg-slate-800 text-amber-400 px-2.5 py-1 rounded-full border border-slate-700"
-                >0 Titik</span
-              >
-            </div>
-
+          <div
+            class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4"
+          >
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
+              Riwayat Pengajuan Izin Saya
+            </h3>
             <div
-              id="kantor-list-container"
-              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+              id="pegawai-izin-list"
+              class="space-y-2 max-h-80 overflow-y-auto pr-1"
             ></div>
           </div>
         </div>
 
-        <!-- TAB 3: MANAJEMEN PEGAWAI -->
+        <!-- SUBTAB 3: RIWAYAT SAYA -->
         <div
-          id="admin-tab-pegawai"
-          class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6"
+          id="pegawai-subtab-riwayat"
+          class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4"
         >
-          <!-- Form Pegawai -->
-          <div
-            class="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-xl space-y-4"
-          >
-            <div class="flex items-center gap-2">
-              <div
-                class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold"
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-history text-amber-400"></i> Riwayat Presensi
+            Saya
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead
+                class="bg-slate-950 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800"
               >
-                <i class="fa-solid fa-user-plus"></i>
-              </div>
-              <div>
-                <h3 class="text-sm font-bold text-white">
-                  Tambah / Update Pegawai
-                </h3>
-                <p class="text-xs text-slate-400">
-                  Tersinkron ke Sheet Pegawai
-                </p>
-              </div>
-            </div>
-
-            <form id="form-pegawai" class="space-y-3">
-              <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >ID Pegawai (NIP / NIK)</label
-                >
-                <input
-                  type="text"
-                  id="pegawai-id"
-                  required
-                  placeholder="PEG-006 atau 1985..."
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs font-mono focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >Nama Lengkap & Gelar</label
-                >
-                <input
-                  type="text"
-                  id="pegawai-nama"
-                  required
-                  placeholder="Nama Lengkap Pegawai..."
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >Email Kedinasan (Kunci Login)</label
-                >
-                <input
-                  type="email"
-                  id="pegawai-email"
-                  required
-                  placeholder="email@maybratkab.go.id"
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >PIN Keamanan (6 Digit)</label
-                >
-                <input
-                  type="text"
-                  id="pegawai-pin"
-                  maxlength="6"
-                  value="123456"
-                  required
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs font-mono tracking-widest focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="text-xs font-semibold text-slate-300 block mb-1"
-                    >Role</label
-                  >
-                  <select
-                    id="pegawai-role"
-                    class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                  >
-                    <option value="Pegawai">Pegawai</option>
-                    <option value="Admin">Admin</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="text-xs font-semibold text-slate-300 block mb-1"
-                    >Status</label
-                  >
-                  <select
-                    id="pegawai-status"
-                    class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                  >
-                    <option value="Aktif">Aktif</option>
-                    <option value="Nonaktif">Nonaktif</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1"
-                  >Jabatan</label
-                >
-                <input
-                  type="text"
-                  id="pegawai-jabatan"
-                  required
-                  placeholder="Contoh: Pranata Komputer Ahli Muda"
-                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition-all flex items-center justify-center gap-2"
-              >
-                <i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai
-              </button>
-            </form>
-          </div>
-
-          <!-- Tabel Daftar Pegawai -->
-          <div
-            class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl p-4 space-y-3"
-          >
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-id-badge text-blue-400"></i>
-                Daftar Pegawai Diskominfo Terdaftar
-              </h3>
-              <span
-                id="badge-total-pegawai"
-                class="text-xs bg-slate-800 text-blue-400 px-2.5 py-1 rounded-full border border-slate-700"
-                >0 Pegawai</span
-              >
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs text-slate-300">
-                <thead
-                  class="bg-slate-800/80 uppercase tracking-wider text-slate-400 border-b border-slate-800"
-                >
-                  <tr>
-                    <th class="py-2.5 px-3">ID / NIP</th>
-                    <th class="py-2.5 px-3">Nama Lengkap</th>
-                    <th class="py-2.5 px-3">Email</th>
-                    <th class="py-2.5 px-3">PIN</th>
-                    <th class="py-2.5 px-3">Role</th>
-                    <th class="py-2.5 px-3">Status</th>
-                    <th class="py-2.5 px-3 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody
-                  id="table-pegawai-body"
-                  class="divide-y divide-slate-800/60"
-                ></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEW: PEGAWAI PORTAL (PEMINDAI QR CODE & RIWAYAT) -->
-      <div id="view-pegawai" class="hidden space-y-6">
-        <!-- Welcome Banner -->
-        <div
-          class="bg-gradient-to-r from-slate-900 via-blue-950/40 to-slate-900 border border-blue-500/30 rounded-2xl p-5 shadow-xl flex flex-wrap items-center justify-between gap-4"
-        >
-          <div>
-            <div class="flex items-center gap-2 mb-1">
-              <span
-                class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30"
-              >
-                <i class="fa-solid fa-user-check mr-1"></i> Portal Pegawai
-              </span>
-              <span
-                id="user-display-jabatan"
-                class="text-xs text-slate-300"
-              ></span>
-            </div>
-            <h2
-              id="user-display-nama"
-              class="text-xl sm:text-2xl font-bold text-white"
-            >
-              Selamat Datang
-            </h2>
-            <p
-              id="user-display-email"
-              class="text-xs text-slate-400 font-mono"
-            ></p>
-          </div>
-
-          <div
-            class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-right"
-          >
-            <div>
-              <div class="text-[11px] text-slate-400">Presensi Hari Ini</div>
-              <div
-                id="user-today-status"
-                class="text-sm font-bold text-amber-400"
-              >
-                Belum Presensi
-              </div>
-            </div>
-            <div
-              class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg"
-            >
-              <i class="fa-solid fa-clipboard-check"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- Grid Scanner & Presensi Action -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <!-- KOLOM KIRI: SCANNER KAMERA (html5-qrcode) -->
-          <div
-            class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col justify-between"
-          >
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <div
-                    class="w-3 h-3 rounded-full bg-red-500 animate-ping"
-                  ></div>
-                  <h3 class="text-base font-bold text-white">
-                    Pemindai QR Code Kantor
-                  </h3>
-                </div>
-                <span
-                  class="text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700"
-                >
-                  <i class="fa-solid fa-camera mr-1"></i> Kamera Langsung
-                </span>
-              </div>
-              <p class="text-xs text-slate-400 mb-4">
-                Arahkan kamera ke QR Code resmi Diskominfo yang terpasang di
-                kantor.
-              </p>
-
-              <!-- SCANNER VIEWPORT -->
-              <div
-                class="relative w-full aspect-square max-w-sm mx-auto bg-black rounded-2xl overflow-hidden border-2 border-slate-700 shadow-inner flex items-center justify-center"
-              >
-                <div id="qr-reader" class="w-full h-full"></div>
-
-                <!-- Scan overlay crosshair -->
-                <div
-                  class="absolute inset-4 pointer-events-none border border-dashed border-amber-400/50 rounded-xl flex items-center justify-center"
-                >
-                  <div
-                    class="w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent scanner-laser opacity-80"
-                  ></div>
-                </div>
-              </div>
-
-              <!-- Kamera Controls -->
-              <div
-                class="mt-4 flex flex-wrap items-center justify-center gap-2"
-              >
-                <button
-                  onclick="startScanner()"
-                  class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5"
-                >
-                  <i class="fa-solid fa-play"></i> Mulai Kamera
-                </button>
-                <button
-                  onclick="stopScanner()"
-                  class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-slate-700"
-                >
-                  <i class="fa-solid fa-stop"></i> Jeda Kamera
-                </button>
-              </div>
-            </div>
-
-            <!-- Quick Test QR Codes Selector -->
-            <div class="mt-4 pt-3 border-t border-slate-800/80">
-              <div
-                class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between"
-              >
-                <span>Uji Cepat Scan QR Kantor (Simulasi)</span>
-                <span class="text-amber-400"
-                  ><i class="fa-solid fa-bolt"></i> Siap Pakai</span
-                >
-              </div>
-              <div id="quick-qr-chips" class="flex flex-wrap gap-1.5"></div>
-            </div>
-          </div>
-
-          <!-- KOLOM KANAN: STATUS SCAN & TOMBOL PRESENSI MASUK / PULANG -->
-          <div class="lg:col-span-5 space-y-4">
-            <!-- Box Deteksi Kantor Terbaca -->
-            <div
-              class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3"
-            >
-              <div
-                class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5"
-              >
-                <i class="fa-solid fa-location-dot"></i> Kantor Terdeteksi
-              </div>
-
-              <div
-                id="detected-kantor-box"
-                class="p-4 rounded-xl bg-slate-800/80 border border-slate-700 text-center"
-              >
-                <div
-                  class="w-12 h-12 mx-auto mb-2 rounded-xl bg-slate-700 flex items-center justify-center text-slate-400 text-xl"
-                >
-                  <i class="fa-solid fa-qrcode"></i>
-                </div>
-                <div class="text-sm font-bold text-slate-300">
-                  Belum Ada QR Terpindai
-                </div>
-                <p class="text-xs text-slate-400 mt-1">
-                  Arahkan kamera ke QR Code kantor untuk memvalidasi lokasi
-                  presensi.
-                </p>
-              </div>
-
-              <!-- Tombol Aksi Presensi -->
-              <div class="space-y-2 pt-2">
-                <button
-                  id="btn-presensi-masuk"
-                  onclick="submitPresensi('Masuk')"
-                  disabled
-                  class="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-lg transition-all flex items-center justify-center gap-2"
-                >
-                  <i class="fa-solid fa-right-to-bracket text-base"></i>
-                  <span>Presensi Masuk (WIT)</span>
-                </button>
-
-                <button
-                  id="btn-presensi-pulang"
-                  onclick="submitPresensi('Pulang')"
-                  disabled
-                  class="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg transition-all flex items-center justify-center gap-2"
-                >
-                  <i class="fa-solid fa-right-from-bracket text-base"></i>
-                  <span>Presensi Pulang (WIT)</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Riwayat Presensi Pegawai -->
-            <div
-              class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3"
-            >
-              <div class="flex items-center justify-between">
-                <h3
-                  class="text-sm font-bold text-white flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
-                  Riwayat Presensi Saya
-                </h3>
-                <span
-                  id="user-history-count"
-                  class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded"
-                  >0 Catatan</span
-                >
-              </div>
-
-              <div
-                id="user-history-list"
-                class="space-y-2 max-h-64 overflow-y-auto pr-1"
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PRINT CARD MODAL / AREA -->
-      <div
-        id="print-modal"
-        class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-      >
-        <div
-          class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 space-y-4"
-        >
-          <div
-            class="flex items-center justify-between border-b border-slate-800 pb-3"
-          >
-            <h3 class="text-base font-bold text-white">
-              Poster QR Code Siap Cetak
-            </h3>
-            <button
-              onclick="closePrintModal()"
-              class="text-slate-400 hover:text-white"
-            >
-              <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-          </div>
-
-          <div
-            id="print-area"
-            class="bg-white text-slate-950 p-6 rounded-xl border border-slate-300 text-center space-y-4 shadow-xl"
-          >
-            <div class="border-b-2 border-slate-900 pb-3">
-              <div
-                class="text-xs uppercase font-extrabold tracking-widest text-slate-700"
-              >
-                Pemerintah Kabupaten Maybrat
-              </div>
-              <div class="text-base font-black tracking-tight text-slate-950">
-                DINAS KOMUNIKASI DAN INFORMATIKA
-              </div>
-              <div class="text-[11px] text-slate-600 font-medium">
-                Sistem Presensi Digital Berbasis QR Code
-              </div>
-            </div>
-
-            <div class="py-2">
-              <h4
-                id="print-kantor-nama"
-                class="text-lg font-bold text-slate-950"
-              >
-                Nama Kantor
-              </h4>
-              <p
-                id="print-kantor-alamat"
-                class="text-xs text-slate-600 max-w-xs mx-auto mt-0.5"
-              >
-                Alamat Kantor
-              </p>
-            </div>
-
-            <div class="flex justify-center">
-              <div
-                id="print-qr-code"
-                class="p-3 bg-white border-4 border-slate-950 rounded-xl shadow"
-              ></div>
-            </div>
-
-            <div
-              class="bg-slate-100 p-2.5 rounded-lg border border-slate-300 text-center"
-            >
-              <div
-                class="text-xs font-mono font-bold text-slate-900"
-                id="print-kantor-id"
-              >
-                ID: KTR-001
-              </div>
-              <div class="text-[10px] text-slate-600 mt-0.5">
-                Pindai QR ini menggunakan Aplikasi Presensi Diskominfo Maybrat
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-end gap-2 pt-2">
-            <button
-              onclick="closePrintModal()"
-              class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold"
-            >
-              Tutup
-            </button>
-            <button
-              onclick="window.print()"
-              class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-1.5"
-            >
-              <i class="fa-solid fa-print"></i> Cetak Sekarang
-            </button>
+                <tr>
+                  <th class="py-3 px-3">Tipe</th>
+                  <th class="py-3 px-3">Tanggal & WIT</th>
+                  <th class="py-3 px-3">Status</th>
+                  <th class="py-3 px-3">Kantor</th>
+                  <th class="py-3 px-3">Jarak GPS</th>
+                </tr>
+              </thead>
+              <tbody
+                id="pegawai-history-table-body"
+                class="divide-y divide-slate-800/80"
+              ></tbody>
+            </table>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- JAVASCRIPT LOGIC DENGAN PENANGANAN CORS & SESI AMAN -->
+    <!-- PRINT AREA MODAL / CONTAINER -->
+    <div id="print-area" class="hidden p-8 bg-white text-black"></div>
+
+    <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
       // -------------------------------------------------------------
-      // KONFIGURASI INTEGRASI BACKEND GOOGLE APPS SCRIPT
+      // KONFIGURASI GLOBAL BACKEND GOOGLE APPS SCRIPT
       // -------------------------------------------------------------
       const API_URL =
-        "https://script.google.com/macros/s/AKfycbwq0OdWo10RU0bv7Lt9dxIG32IdrtTQYKc7ND40Y2OaqTSv8vInh6smMMvukNrzcdhUuA/exec";
+        "https://script.google.com/macros/s/AKfycbwq0OdWo10RU0bv7Lt9dxIG32IdrtTQYKc7ND40Y2OaqTSv8vInh6smMMvukNrzcdhUuA/exec"; // Masukkan URL Deployment Google Apps Script Anda di sini
+
+      // Koordinat Pusat Diskominfo Kabupaten Maybrat di Kumurkek
+      const KUMURKEK_CENTER = {
+        lat: -0.5512,
+        lng: 132.4512,
+        radius_meter: 100,
+      };
 
       // State Aplikasi
       let currentUser = null;
-      let currentSessionToken = null;
       let kantorList = [];
       let pegawaiList = [];
-      let presensiHistory = [];
+      let presensiList = [];
+      let izinList = [];
+      let html5QrScanner = null;
       let detectedKantor = null;
-      let html5QrCodeScanner = null;
+      let isGpsSimulated = true;
+      let userCoords = { lat: -0.5512, lng: 132.4512 };
+      let currentGpsDistance = 12; // meter
+      let isAutoPolling = true;
+      let pollIntervalSeconds = 30;
+      let pollCountdown = 30;
 
-      // Database Default Seed
+      // Seed Data Kantor
       const SEED_KANTOR = [
         {
           id_kantor: "KTR-DISKOMINFO-01",
           nama_kantor: "Kantor Diskominfo Kab. Maybrat (Kumurkek)",
           alamat:
             "Jl. Poros Kumurkek - Ayamaru, Kompleks Kantor Bupati Maybrat",
+          latitude: -0.5512,
+          longitude: 132.4512,
+          radius_meter: 100,
           qr_code_data: "KTR-DISKOMINFO-01",
           created_at: new Date().toISOString(),
         },
         {
           id_kantor: "KTR-DISKOMINFO-02",
-          nama_kantor: "Media Center & Layanan Informasi Publik",
+          nama_kantor: "Media Center & Layanan PPID",
           alamat: "Gedung Media Center Diskominfo Maybrat, Kumurkek",
+          latitude: -0.5518,
+          longitude: 132.4508,
+          radius_meter: 100,
           qr_code_data: "KTR-DISKOMINFO-02",
           created_at: new Date().toISOString(),
         },
       ];
 
+      // Seed Data Pegawai
       const SEED_PEGAWAI = [
         {
           id_pegawai: "PEG-001",
           nama_lengkap: "Admin Diskominfo Maybrat",
           email: "maybratdiskominfo@gmail.com",
           role: "Admin",
-          jabatan: "Administrator Sistem & TI",
+          jabatan: "Kepala Seksi Pengelolaan Data & Aplikasi",
           status: "Aktif",
           pin: "123456",
         },
@@ -1114,6 +1374,23 @@
         },
       ];
 
+      // Helper Rumus Haversine untuk menghitung jarak dua titik GPS dalam satuan meter
+      function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371e3; // radius bumi dalam meter
+        const rad = (deg) => (deg * Math.PI) / 180;
+        const dLat = rad(lat2 - lat1);
+        const dLon = rad(lon2 - lon1);
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(rad(lat1)) *
+            Math.cos(rad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.round(R * c);
+      }
+
+      // Helper Local Storage
       function getStoredData(key, fallback) {
         const data = localStorage.getItem(key);
         return data ? JSON.parse(data) : fallback;
@@ -1144,7 +1421,6 @@
           });
           return await res.json();
         } else {
-          // Gunakan text/plain untuk bypass CORS preflight OPTIONS!
           try {
             const res = await fetch(API_URL, {
               method: "POST",
@@ -1156,7 +1432,6 @@
               return await res.json();
             }
           } catch (e) {
-            console.warn("POST failed, attempting GET fallback:", e);
             const fallbackUrl = new URL(API_URL);
             fallbackUrl.searchParams.set("action", action);
             fallbackUrl.searchParams.set(
@@ -1173,949 +1448,1141 @@
         return null;
       }
 
-      // Inisialisasi awal saat halaman dimuat
+      // Inisialisasi Aplikasi Saat Memuat Halaman
       window.addEventListener("DOMContentLoaded", async () => {
-        kantorList = getStoredData("KANTOR_DATA", SEED_KANTOR);
-        pegawaiList = getStoredData("PEGAWAI_DATA", SEED_PEGAWAI);
-        presensiHistory = getStoredData("PRESENSI_DATA", []);
+        kantorList = getStoredData("MAYBRAT_KANTOR", SEED_KANTOR);
+        pegawaiList = getStoredData("MAYBRAT_PEGAWAI", SEED_PEGAWAI);
+        presensiList = getStoredData("MAYBRAT_PRESENSI", []);
+        izinList = getStoredData("MAYBRAT_IZIN", []);
 
         initClockWIT();
-        setupEventListeners();
-        checkConnectionStatus();
+        setupDatePickers();
         restoreSavedSession();
+        startAutoPollingTimer();
       });
 
-      // Cek koneksi ke backend
-      async function checkConnectionStatus() {
-        const statusText = document.getElementById("conn-status-text");
-        const badge = document.getElementById("login-conn-indicator");
-        if (!API_URL || API_URL === "URL_WEB_APP_ANDA") {
-          statusText.textContent = "Mode Database Lokal (Offline-Ready)";
-          return;
-        }
-
-        try {
-          statusText.textContent = "Menghubungkan ke Sheets...";
-          const data = await requestGAS("ping", {}, "GET");
-          if (data && data.success) {
-            statusText.textContent =
-              "Terhubung: DATABASE_PRESENSI_DISKOMINFO_MAYBRAT";
-            badge.className =
-              "mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
-          } else {
-            statusText.textContent = "Google Sheets Terhubung Parsial";
-          }
-        } catch (e) {
-          statusText.textContent =
-            "Koneksi Google Sheets Terkendala (Gunakan Mode Lokal)";
-          badge.className =
-            "mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30";
-        }
+      function setupDatePickers() {
+        const today = getTodayStringWIT();
+        const dateFilter = document.getElementById("filter-rekap-date");
+        if (dateFilter) dateFilter.value = today;
+        const tglMulai = document.getElementById("izin-tgl-mulai");
+        const tglSelesai = document.getElementById("izin-tgl-selesai");
+        if (tglMulai) tglMulai.value = today;
+        if (tglSelesai) tglSelesai.value = today;
       }
 
-      // Sesi Login Aman: Pulihkan sesi tersimpan jika valid
-      function restoreSavedSession() {
-        try {
-          const raw =
-            sessionStorage.getItem("MAYBRAT_SESSION") ||
-            localStorage.getItem("MAYBRAT_SESSION");
-          if (!raw) {
-            renderAuthNav();
-            return;
-          }
-          const session = JSON.parse(decodeURIComponent(atob(raw)));
-          if (session && session.user && session.user.status !== "Nonaktif") {
-            currentSessionToken = session.token;
-            loginSuccess(session.user, false);
-          } else {
-            handleLogout();
-          }
-        } catch (e) {
-          handleLogout();
-        }
-      }
-
-      function saveSessionSecure(user) {
-        const token =
-          "TOK-" +
-          Math.random().toString(36).substring(2, 10).toUpperCase() +
-          "-" +
-          Date.now();
-        const payload = { user, token, timestamp: Date.now() };
-        const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
-        sessionStorage.setItem("MAYBRAT_SESSION", encoded);
-        localStorage.setItem("MAYBRAT_SESSION", encoded);
-        currentSessionToken = token;
-      }
-
-      // 1. Jam Digital WIT Real-Time (GMT+9)
+      // Jam Digital Realtime Waktu Indonesia Timur (WIT / GMT+9)
       function initClockWIT() {
         function update() {
           const now = new Date();
           const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-          const witDate = new Date(utc + 3600000 * 9);
+          const wit = new Date(utc + 3600000 * 9);
 
           const timeStr =
-            witDate.toLocaleTimeString("id-ID", { hour12: false }) + " WIT";
-          const dateStr = witDate.toLocaleDateString("id-ID", {
+            wit.toLocaleTimeString("id-ID", { hour12: false }) + " WIT";
+          const dateStr = wit.toLocaleDateString("id-ID", {
             weekday: "long",
             day: "numeric",
             month: "long",
             year: "numeric",
           });
 
-          const timeEl = document.getElementById("wit-time");
-          const dateEl = document.getElementById("wit-date");
-          if (timeEl) timeEl.textContent = timeStr;
+          const clockEl = document.getElementById("live-wit-clock");
+          const dateEl = document.getElementById("live-wit-date");
+          if (clockEl) clockEl.textContent = timeStr;
           if (dateEl) dateEl.textContent = dateStr;
         }
         update();
         setInterval(update, 1000);
       }
 
-      function getNowWIT() {
+      function getTodayStringWIT() {
         const now = new Date();
         const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-        const witDate = new Date(utc + 3600000 * 9);
-
-        const yyyy = witDate.getFullYear();
-        const mm = String(witDate.getMonth() + 1).padStart(2, "0");
-        const dd = String(witDate.getDate()).padStart(2, "0");
-        const tanggal = yyyy + "-" + mm + "-" + dd;
-        const waktu_wit = witDate.toLocaleTimeString("id-ID", {
-          hour12: false,
-        });
-        return { tanggal, waktu_wit };
+        const wit = new Date(utc + 3600000 * 9);
+        const yyyy = wit.getFullYear();
+        const mm = String(wit.getMonth() + 1).padStart(2, "0");
+        const dd = String(wit.getDate()).padStart(2, "0");
+        return `${yyyy}-${mm}-${dd}`;
       }
 
-      // 2. Setup Event Listeners
-      function setupEventListeners() {
-        // Login Form
-        document
-          .getElementById("form-login")
-          .addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("login-email").value.trim();
-            const pin = document.getElementById("login-pin").value.trim();
-            await handleLogin(email, pin);
-          });
-
-        // Simpan Kantor Form
-        document
-          .getElementById("form-kantor")
-          .addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const id_kantor = document.getElementById("kantor-id").value.trim();
-            const nama_kantor = document
-              .getElementById("kantor-nama")
-              .value.trim();
-            const alamat = document
-              .getElementById("kantor-alamat")
-              .value.trim();
-
-            await handleSaveKantor({ id_kantor, nama_kantor, alamat });
-          });
-
-        // Simpan Pegawai Form
-        document
-          .getElementById("form-pegawai")
-          .addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const id_pegawai = document
-              .getElementById("pegawai-id")
-              .value.trim();
-            const nama_lengkap = document
-              .getElementById("pegawai-nama")
-              .value.trim();
-            const email = document.getElementById("pegawai-email").value.trim();
-            const pin =
-              document.getElementById("pegawai-pin").value.trim() || "123456";
-            const role = document.getElementById("pegawai-role").value;
-            const status = document.getElementById("pegawai-status").value;
-            const jabatan = document
-              .getElementById("pegawai-jabatan")
-              .value.trim();
-
-            await handleSavePegawai({
-              id_pegawai,
-              nama_lengkap,
-              email,
-              pin,
-              role,
-              jabatan,
-              status,
-            });
-          });
+      function getNowTimeWIT() {
+        const now = new Date();
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+        const wit = new Date(utc + 3600000 * 9);
+        return wit.toLocaleTimeString("id-ID", { hour12: false });
       }
 
-      // 3. Autentikasi Login dengan Validasi Status Nonaktif & PIN
-      async function handleLogin(email, pin) {
-        hideLoginError();
-        setLoginLoading(true);
+      // -------------------------------------------------------------
+      // REAL-TIME AUTO POLLING SETIAP 30 DETIK (LIVE SYNC ADMIN)
+      // -------------------------------------------------------------
+      function startAutoPollingTimer() {
+        setInterval(async () => {
+          if (!isAutoPolling || !currentUser || currentUser.role !== "Admin")
+            return;
+          pollCountdown--;
+          const btn = document.getElementById("btn-toggle-autopoll");
+          if (btn) btn.textContent = `Aktif (${pollCountdown}s)`;
 
-        // Cek ke Google Apps Script
-        if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
-          try {
-            const data = await requestGAS("loginCheck", { email, pin }, "GET");
-            if (data && typeof data === "object") {
-              if (data.success && data.user) {
-                setLoginLoading(false);
-                loginSuccess(data.user, true);
-                return;
-              } else {
-                setLoginLoading(false);
-                showLoginError(data.message || "Email atau PIN tidak sesuai.");
-                return;
-              }
+          if (pollCountdown <= 0) {
+            await triggerManualSync(true);
+            pollCountdown = 30;
+          }
+        }, 1000);
+      }
+
+      function toggleAutoPolling() {
+        isAutoPolling = !isAutoPolling;
+        const btn = document.getElementById("btn-toggle-autopoll");
+        if (btn) {
+          if (isAutoPolling) {
+            btn.textContent = `Aktif (${pollCountdown}s)`;
+            btn.className =
+              "px-2 py-0.5 rounded font-bold text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+          } else {
+            btn.textContent = "Nonaktif";
+            btn.className =
+              "px-2 py-0.5 rounded font-bold text-[11px] bg-slate-800 text-slate-500";
+          }
+        }
+      }
+
+      async function triggerManualSync(isSilent = false) {
+        const icon = document.getElementById("sync-spinner-icon");
+        if (icon) icon.classList.add("fa-spin");
+
+        try {
+          if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
+            const [ktrRes, pegRes, prsRes, iznRes] = await Promise.all([
+              requestGAS("getKantorList"),
+              requestGAS("getAllPegawai"),
+              requestGAS("getHistory"),
+              requestGAS("getIzinList"),
+            ]);
+
+            if (ktrRes && ktrRes.success && ktrRes.data) {
+              kantorList = ktrRes.data;
+              setStoredData("MAYBRAT_KANTOR", kantorList);
             }
-          } catch (err) {
-            console.warn("GAS Login error, trying local fallback:", err);
+            if (pegRes && pegRes.success && pegRes.data) {
+              pegawaiList = pegRes.data;
+              setStoredData("MAYBRAT_PEGAWAI", pegawaiList);
+            }
+            if (prsRes && prsRes.success && prsRes.data) {
+              presensiList = prsRes.data;
+              setStoredData("MAYBRAT_PRESENSI", presensiList);
+            }
+            if (iznRes && iznRes.success && iznRes.data) {
+              izinList = iznRes.data;
+              setStoredData("MAYBRAT_IZIN", izinList);
+            }
           }
-        }
-
-        // Fallback validasi lokal
-        const user = pegawaiList.find(
-          (p) => p.email.toLowerCase() === email.toLowerCase(),
-        );
-        setLoginLoading(false);
-
-        if (user) {
-          // a. Validasi Status Nonaktif Mutlak
-          if (user.status === "Nonaktif") {
-            showLoginError(
-              "AKUN NONAKTIF: Status akun Anda telah dinonaktifkan oleh Administrator. Akses ditolak.",
-            );
-            return;
-          }
-
-          // b. Validasi PIN Keamanan
-          const storedPin = user.pin || "123456";
-          if (pin && storedPin && pin !== storedPin) {
-            showLoginError(
-              "PIN KEAMANAN SALAH: Masukkan 6 digit PIN yang benar.",
-            );
-            return;
-          }
-
-          loginSuccess(user, true);
-        } else {
-          showLoginError(
-            "Email " +
-              email +
-              " tidak terdaftar di database Diskominfo Maybrat.",
-          );
+          renderRekapTable();
+          renderIzinTable();
+        } catch (e) {
+          console.warn("Sync failed:", e);
+        } finally {
+          if (icon) icon.classList.remove("fa-spin");
+          pollCountdown = 30;
         }
       }
 
+      // -------------------------------------------------------------
+      // AUTENTIKASI LOGIN DUA LAPIS (EMAIL + PIN + STATUS AKTIF)
+      // -------------------------------------------------------------
       function quickFillLogin(email, pin) {
         document.getElementById("login-email").value = email;
         document.getElementById("login-pin").value = pin;
-        handleLogin(email, pin);
       }
 
-      function showLoginError(msg) {
-        const box = document.getElementById("login-error-box");
-        const text = document.getElementById("login-error-text");
-        text.textContent = msg;
-        box.classList.remove("hidden");
-      }
-
-      function hideLoginError() {
-        document.getElementById("login-error-box").classList.add("hidden");
-      }
-
-      function setLoginLoading(loading) {
-        const btn = document.getElementById("btn-submit-login");
+      async function handleLoginSubmit(e) {
+        e.preventDefault();
+        const email = document
+          .getElementById("login-email")
+          .value.trim()
+          .toLowerCase();
+        const pin = document.getElementById("login-pin").value.trim();
+        const alertEl = document.getElementById("login-alert");
         const btnText = document.getElementById("btn-login-text");
         const btnIcon = document.getElementById("btn-login-icon");
-        btn.disabled = loading;
-        if (loading) {
-          btnText.textContent = "Memverifikasi...";
-          btnIcon.className = "fa-solid fa-spinner fa-spin";
-        } else {
+
+        btnText.textContent = "Memverifikasi...";
+        btnIcon.className = "fa-solid fa-spinner fa-spin";
+        alertEl.classList.add("hidden");
+
+        let userFound = null;
+
+        // Cek ke GAS terlebih dahulu
+        if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
+          try {
+            const gasRes = await requestGAS(
+              "loginCheck",
+              { email, pin },
+              "GET",
+            );
+            if (gasRes && gasRes.success && gasRes.user) {
+              userFound = gasRes.user;
+            } else if (gasRes && !gasRes.success) {
+              showLoginAlert(
+                gasRes.message || "Email atau PIN tidak valid.",
+                "error",
+              );
+              btnText.textContent = "Verifikasi & Masuk";
+              btnIcon.className = "fa-solid fa-arrow-right";
+              return;
+            }
+          } catch (err) {
+            console.warn("GAS check error, fallback to local:", err);
+          }
+        }
+
+        // Fallback ke penyimpanan lokal jika GAS offline
+        if (!userFound) {
+          const local = pegawaiList.find(
+            (p) => p.email.toLowerCase() === email,
+          );
+          if (local) {
+            if (local.status === "Nonaktif") {
+              showLoginAlert(
+                "AKUN NONAKTIF: Akun Anda telah dinonaktifkan oleh Administrator.",
+                "error",
+              );
+              btnText.textContent = "Verifikasi & Masuk";
+              btnIcon.className = "fa-solid fa-arrow-right";
+              return;
+            }
+            if (pin && local.pin && pin !== local.pin) {
+              showLoginAlert("PIN Keamanan salah! Silakan coba lagi.", "error");
+              btnText.textContent = "Verifikasi & Masuk";
+              btnIcon.className = "fa-solid fa-arrow-right";
+              return;
+            }
+            userFound = local;
+          }
+        }
+
+        if (!userFound) {
+          showLoginAlert(
+            "Email tidak terdaftar di Sheet Pegawai Diskominfo Maybrat.",
+            "error",
+          );
           btnText.textContent = "Verifikasi & Masuk";
           btnIcon.className = "fa-solid fa-arrow-right";
+          return;
+        }
+
+        // Login Sukses
+        currentUser = userFound;
+        sessionStorage.setItem("MAYBRAT_SESSION", JSON.stringify(currentUser));
+        showUserSession(currentUser);
+        btnText.textContent = "Verifikasi & Masuk";
+        btnIcon.className = "fa-solid fa-arrow-right";
+      }
+
+      function showLoginAlert(msg, type) {
+        const alertEl = document.getElementById("login-alert");
+        alertEl.className =
+          type === "error"
+            ? "p-3 rounded-xl text-xs flex items-start gap-2 bg-red-500/15 border border-red-500/30 text-red-300"
+            : "p-3 rounded-xl text-xs flex items-start gap-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300";
+        alertEl.innerHTML = `<i class="fa-solid fa-circle-exclamation mt-0.5"></i> <span>${msg}</span>`;
+        alertEl.classList.remove("hidden");
+      }
+
+      function restoreSavedSession() {
+        const saved = sessionStorage.getItem("MAYBRAT_SESSION");
+        if (saved) {
+          try {
+            currentUser = JSON.parse(saved);
+            showUserSession(currentUser);
+          } catch (e) {}
         }
       }
 
-      function loginSuccess(user, saveToStorage = true) {
-        currentUser = user;
-        if (saveToStorage) {
-          saveSessionSecure(user);
-        }
-
-        showToast("Selamat datang, " + user.nama_lengkap + "!", "success");
-        renderAuthNav();
-
+      function showUserSession(user) {
         document.getElementById("view-login").classList.add("hidden");
+        document.getElementById("header-user-pill").classList.remove("hidden");
+        document.getElementById("header-user-pill").classList.add("flex");
+        document.getElementById("header-user-name").textContent =
+          user.nama_lengkap;
+        document.getElementById("header-user-role").textContent =
+          `${user.role} • ${user.jabatan}`;
+
         if (user.role === "Admin") {
           document.getElementById("view-admin").classList.remove("hidden");
           document.getElementById("view-pegawai").classList.add("hidden");
-          renderAdminDashboard();
+          renderRekapTable();
+          renderKantorCards();
+          renderPegawaiTable();
+          renderIzinTable();
         } else {
-          document.getElementById("view-pegawai").classList.remove("hidden");
           document.getElementById("view-admin").classList.add("hidden");
-          renderPegawaiPortal();
+          document.getElementById("view-pegawai").classList.remove("hidden");
+          document.getElementById("pegawai-badge-name").textContent =
+            user.nama_lengkap;
+          document.getElementById("pegawai-badge-jabatan").textContent =
+            `${user.jabatan} • ${user.email}`;
+          document.getElementById("pegawai-badge-id").textContent =
+            user.id_pegawai;
+          renderPegawaiQuickKantorButtons();
+          renderPegawaiHistory();
+          renderPegawaiIzinList();
+          updatePegawaiTodayStatus();
+          startPegawaiScanner();
         }
-
-        // Tarik data terbaru dari Google Sheets
-        fetchSyncAllData();
       }
 
       function handleLogout() {
-        if (html5QrCodeScanner) {
-          try {
-            html5QrCodeScanner.stop();
-          } catch (e) {}
-        }
-        currentUser = null;
-        currentSessionToken = null;
-        detectedKantor = null;
         sessionStorage.removeItem("MAYBRAT_SESSION");
-        localStorage.removeItem("MAYBRAT_SESSION");
-        renderAuthNav();
+        currentUser = null;
+        stopPegawaiScanner();
+        document.getElementById("header-user-pill").classList.add("hidden");
+        document.getElementById("header-user-pill").classList.remove("flex");
         document.getElementById("view-admin").classList.add("hidden");
         document.getElementById("view-pegawai").classList.add("hidden");
         document.getElementById("view-login").classList.remove("hidden");
-        showToast("Berhasil keluar dari sistem presensi.", "info");
       }
 
-      // Sinkronisasi data menyeluruh dari Google Sheets
-      async function fetchSyncAllData() {
-        if (!API_URL || API_URL === "URL_WEB_APP_ANDA") return;
-        try {
-          const [ktrRes, pegRes, prsRes] = await Promise.all([
-            requestGAS("getKantorList", {}, "GET"),
-            requestGAS("getAllPegawai", {}, "GET"),
-            requestGAS("getHistory", {}, "GET"),
-          ]);
-
-          if (ktrRes && ktrRes.success && Array.isArray(ktrRes.data)) {
-            kantorList = ktrRes.data;
-            setStoredData("KANTOR_DATA", kantorList);
-            if (currentUser?.role === "Admin") renderKantorList();
-          }
-          if (pegRes && pegRes.success && Array.isArray(pegRes.data)) {
-            pegawaiList = pegRes.data;
-            setStoredData("PEGAWAI_DATA", pegawaiList);
-            if (currentUser?.role === "Admin") renderPegawaiTable();
-          }
-          if (prsRes && prsRes.success && Array.isArray(prsRes.data)) {
-            presensiHistory = prsRes.data;
-            setStoredData("PRESENSI_DATA", presensiHistory);
-            if (currentUser?.role === "Admin") renderRekapTable();
-            if (currentUser?.role === "Pegawai") renderUserHistory();
-          }
-        } catch (err) {
-          console.warn("Sync failed, using offline data:", err);
-        }
-      }
-
-      // 4. Render Auth Header Nav
-      function renderAuthNav() {
-        const el = document.getElementById("auth-actions");
-        if (!currentUser) {
-          el.innerHTML =
-            '<span class="text-xs text-slate-400 font-medium">Silakan Masuk</span>';
-        } else {
-          el.innerHTML = [
-            '<div class="flex items-center gap-2">',
-            '<div class="text-right hidden sm:block">',
-            '<div class="text-xs font-bold text-white">' +
-              currentUser.nama_lengkap +
-              "</div>",
-            '<div class="text-[10px] text-amber-400 font-semibold">' +
-              currentUser.role +
-              " - " +
-              currentUser.jabatan +
-              "</div>",
-            "</div>",
-            '<button onclick="handleLogout()" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer">',
-            '<i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar',
-            "</button>",
-            "</div>",
-          ].join("");
-        }
-      }
-
-      // 5. Admin Panel Functions
-      function switchAdminTab(tab) {
-        ["rekap", "kantor", "pegawai"].forEach((t) => {
-          const tabEl = document.getElementById("admin-tab-" + t);
-          const btnEl = document.getElementById("tab-btn-" + t);
-          if (t === tab) {
-            tabEl.classList.remove("hidden");
-            btnEl.className =
-              "px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-amber-500 text-slate-950 transition-all flex items-center gap-2";
+      // -------------------------------------------------------------
+      // GEOFENCING GPS & VALIDASI RADIUS (HAVERSINE FORMULA)
+      // -------------------------------------------------------------
+      function toggleGpsSimulation() {
+        isGpsSimulated = !isGpsSimulated;
+        const btn = document.getElementById("btn-toggle-gps-sim");
+        if (btn) {
+          if (isGpsSimulated) {
+            btn.textContent = "Simulasi Kumurkek (Aktif)";
+            btn.className =
+              "text-[10px] font-bold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40";
           } else {
-            tabEl.classList.add("hidden");
-            btnEl.className =
-              "px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-2";
+            btn.textContent = "GPS Riil Perangkat";
+            btn.className =
+              "text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700";
           }
-        });
-        if (tab === "kantor") renderKantorList();
-        if (tab === "pegawai") renderPegawaiTable();
-        if (tab === "rekap") renderRekapTable();
-      }
-
-      function renderAdminDashboard() {
-        const now = getNowWIT();
-        const dateFilter = document.getElementById("filter-rekap-date");
-        if (dateFilter && !dateFilter.value) dateFilter.value = now.tanggal;
-
-        renderRekapTable();
-        renderKantorList();
-        renderPegawaiTable();
-      }
-
-      function renderRekapTable() {
-        const dateFilter = document.getElementById("filter-rekap-date").value;
-        const typeFilter = document.getElementById("filter-rekap-type").value;
-        const searchFilter = (
-          document.getElementById("filter-rekap-search").value || ""
-        ).toLowerCase();
-
-        let list = [...presensiHistory];
-        if (dateFilter) list = list.filter((p) => p.tanggal === dateFilter);
-        if (typeFilter !== "ALL")
-          list = list.filter((p) => p.tipe === typeFilter);
-        if (searchFilter) {
-          list = list.filter(
-            (p) =>
-              (p.nama_pegawai || "").toLowerCase().includes(searchFilter) ||
-              (p.email_pegawai || "").toLowerCase().includes(searchFilter),
-          );
         }
+        updateGpsDistance();
+      }
 
-        const today = getNowWIT().tanggal;
-        const todayList = presensiHistory.filter((p) => p.tanggal === today);
-        document.getElementById("stat-today-total").textContent =
-          todayList.length;
-        document.getElementById("stat-today-masuk").textContent =
-          todayList.filter((p) => p.tipe === "Masuk").length;
-        document.getElementById("stat-today-pulang").textContent =
-          todayList.filter((p) => p.tipe === "Pulang").length;
-        document.getElementById("stat-total-pegawai").textContent =
-          pegawaiList.length;
+      function updateGpsDistance() {
+        if (!detectedKantor) return;
 
-        const tbody = document.getElementById("table-rekap-body");
-        if (list.length === 0) {
-          tbody.innerHTML =
-            '<tr><td colspan="8" class="text-center py-8 text-slate-500"><i class="fa-solid fa-inbox text-2xl mb-1 block"></i>Tidak ada data presensi yang sesuai.</td></tr>';
+        const targetLat = detectedKantor.latitude || KUMURKEK_CENTER.lat;
+        const targetLng = detectedKantor.longitude || KUMURKEK_CENTER.lng;
+        const maxRadius = detectedKantor.radius_meter || 100;
+
+        if (isGpsSimulated) {
+          // Simulasi di dalam kantor Kumurkek
+          userCoords = { lat: targetLat + 0.00008, lng: targetLng + 0.00008 };
+          currentGpsDistance = calculateHaversineDistance(
+            userCoords.lat,
+            userCoords.lng,
+            targetLat,
+            targetLng,
+          );
+        } else if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              userCoords = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+              };
+              currentGpsDistance = calculateHaversineDistance(
+                userCoords.lat,
+                userCoords.lng,
+                targetLat,
+                targetLng,
+              );
+              displayGpsBadge(currentGpsDistance, maxRadius);
+            },
+            (err) => {
+              console.warn("Geolocation error:", err);
+              currentGpsDistance = 15;
+              displayGpsBadge(currentGpsDistance, maxRadius);
+            },
+          );
           return;
         }
 
-        tbody.innerHTML = list
-          .map((item, idx) => {
-            const ktr = kantorList.find((k) => k.id_kantor === item.id_kantor);
-            const namaKantor = ktr ? ktr.nama_kantor : item.id_kantor;
-            const isMasuk = item.tipe === "Masuk";
-            const badgeClass = isMasuk
-              ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-              : "bg-amber-500/20 text-amber-400 border-amber-500/30";
-
-            return [
-              '<tr class="hover:bg-slate-800/40 transition-colors">',
-              '<td class="py-2.5 px-4 text-slate-500">' + (idx + 1) + "</td>",
-              '<td class="py-2.5 px-4 font-mono text-[11px] text-amber-400">' +
-                item.id_presensi +
-                "</td>",
-              '<td class="py-2.5 px-4 font-medium text-white">' +
-                item.nama_pegawai +
-                "</td>",
-              '<td class="py-2.5 px-4 text-slate-400 font-mono text-[11px]">' +
-                item.email_pegawai +
-                "</td>",
-              '<td class="py-2.5 px-4"><div class="font-medium text-slate-200">' +
-                namaKantor +
-                '</div><div class="text-[10px] text-slate-500 font-mono">' +
-                item.id_kantor +
-                "</div></td>",
-              '<td class="py-2.5 px-4 text-slate-300">' +
-                item.tanggal +
-                "</td>",
-              '<td class="py-2.5 px-4 font-mono font-bold text-white">' +
-                item.waktu_wit +
-                " WIT</td>",
-              '<td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded text-[11px] font-bold border ' +
-                badgeClass +
-                '">' +
-                item.tipe +
-                "</span></td>",
-              "</tr>",
-            ].join("");
-          })
-          .join("");
+        displayGpsBadge(currentGpsDistance, maxRadius);
       }
 
-      function renderKantorList() {
-        const container = document.getElementById("kantor-list-container");
-        const badge = document.getElementById("badge-total-kantor");
-        badge.textContent = kantorList.length + " Titik";
+      function displayGpsBadge(dist, maxRadius) {
+        const box = document.getElementById("box-gps-distance");
+        const text = document.getElementById("gps-dist-text");
+        const badge = document.getElementById("gps-dist-badge");
+        if (!box || !text || !badge) return;
 
-        container.innerHTML = kantorList
-          .map((k) =>
-            [
-              '<div class="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-lg space-y-3">',
-              '<div class="flex items-start justify-between gap-2">',
-              "<div>",
-              '<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">' +
-                k.id_kantor +
-                "</span>",
-              '<h4 class="text-sm font-bold text-white mt-1.5">' +
-                k.nama_kantor +
-                "</h4>",
-              '<p class="text-xs text-slate-400 mt-0.5 leading-relaxed">' +
-                k.alamat +
-                "</p>",
-              "</div>",
-              "</div>",
-              '<div class="p-3 bg-white rounded-lg flex items-center justify-center">',
-              '<div id="qrcode-' + k.id_kantor + '"></div>',
-              "</div>",
-              '<div class="flex items-center gap-2 pt-1">',
-              "<button onclick=\"openPrintModal('" +
-                k.id_kantor +
-                '\')" class="flex-1 py-1.5 px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 cursor-pointer">',
-              '<i class="fa-solid fa-print"></i> Cetak Kartu QR',
-              "</button>",
-              "</div>",
-              "</div>",
-            ].join(""),
-          )
-          .join("");
-
-        kantorList.forEach((k) => {
-          const el = document.getElementById("qrcode-" + k.id_kantor);
-          if (el) {
-            el.innerHTML = "";
-            new QRCode(el, {
-              text: k.id_kantor,
-              width: 140,
-              height: 140,
-              colorDark: "#000000",
-              colorLight: "#ffffff",
-              correctLevel: QRCode.CorrectLevel.H,
-            });
-          }
-        });
-      }
-
-      async function handleSaveKantor(data) {
-        showToast("Menyimpan data kantor...", "info");
-
-        const payload = {
-          id_kantor: data.id_kantor,
-          nama_kantor: data.nama_kantor,
-          alamat: data.alamat,
-          qr_code_data: data.id_kantor,
-          created_at: new Date().toISOString(),
-        };
-
-        requestGAS("saveKantor", payload, "POST");
-
-        kantorList = [
-          payload,
-          ...kantorList.filter((k) => k.id_kantor !== payload.id_kantor),
-        ];
-        setStoredData("KANTOR_DATA", kantorList);
-        renderKantorList();
-        document.getElementById("form-kantor").reset();
-        showToast("Kantor dan QR Code berhasil disimpan!", "success");
-      }
-
-      function openPrintModal(id_kantor) {
-        const k = kantorList.find((item) => item.id_kantor === id_kantor);
-        if (!k) return;
-
-        document.getElementById("print-kantor-nama").textContent =
-          k.nama_kantor;
-        document.getElementById("print-kantor-alamat").textContent = k.alamat;
-        document.getElementById("print-kantor-id").textContent =
-          "ID: " + k.id_kantor;
-
-        const qrContainer = document.getElementById("print-qr-code");
-        qrContainer.innerHTML = "";
-        new QRCode(qrContainer, {
-          text: k.id_kantor,
-          width: 220,
-          height: 220,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H,
-        });
-
-        document.getElementById("print-modal").classList.remove("hidden");
-      }
-
-      function closePrintModal() {
-        document.getElementById("print-modal").classList.add("hidden");
-      }
-
-      function renderPegawaiTable() {
-        const tbody = document.getElementById("table-pegawai-body");
-        const badge = document.getElementById("badge-total-pegawai");
-        badge.textContent = pegawaiList.length + " Pegawai";
-
-        tbody.innerHTML = pegawaiList
-          .map((p) =>
-            [
-              '<tr class="hover:bg-slate-800/40">',
-              '<td class="py-2.5 px-3 font-mono text-[11px] text-blue-400">' +
-                p.id_pegawai +
-                "</td>",
-              '<td class="py-2.5 px-3 font-medium text-white">' +
-                p.nama_lengkap +
-                "</td>",
-              '<td class="py-2.5 px-3 text-slate-400 font-mono text-[11px]">' +
-                p.email +
-                "</td>",
-              '<td class="py-2.5 px-3 font-mono text-amber-400 font-bold">' +
-                (p.pin || "123456") +
-                "</td>",
-              '<td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ' +
-                (p.role === "Admin"
-                  ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                  : "bg-slate-800 text-slate-300") +
-                '">' +
-                p.role +
-                "</span></td>",
-              '<td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ' +
-                (p.status === "Aktif"
-                  ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-red-500/20 text-red-400") +
-                '">' +
-                p.status +
-                "</span></td>",
-              '<td class="py-2.5 px-3 text-right">',
-              "<button onclick=\"toggleStatusPegawai('" +
-                p.id_pegawai +
-                '\')" class="text-xs text-slate-400 hover:text-amber-400 p-1 cursor-pointer" title="Ubah status">',
-              '<i class="fa-solid fa-arrows-rotate"></i>',
-              "</button>",
-              "</td>",
-              "</tr>",
-            ].join(""),
-          )
-          .join("");
-      }
-
-      async function handleSavePegawai(data) {
-        showToast("Menyimpan pegawai...", "info");
-        requestGAS("savePegawai", data, "POST");
-
-        const idx = pegawaiList.findIndex(
-          (p) => p.email.toLowerCase() === data.email.toLowerCase(),
-        );
-        if (idx >= 0) {
-          pegawaiList[idx] = data;
+        box.classList.remove("hidden");
+        if (dist <= maxRadius) {
+          box.className =
+            "p-3 rounded-2xl border flex items-center justify-between bg-emerald-950/40 border-emerald-500/40 text-emerald-300";
+          text.textContent = `Jarak ke Kantor: ${dist} meter (Dalam Radius Aman)`;
+          badge.className =
+            "text-xs font-black px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400";
+          badge.textContent = "VALID";
         } else {
-          pegawaiList.push(data);
+          box.className =
+            "p-3 rounded-2xl border flex items-center justify-between bg-red-950/40 border-red-500/40 text-red-300";
+          text.textContent = `Di Luar Radius: ${dist} meter (Maks: ${maxRadius}m)`;
+          badge.className =
+            "text-xs font-black px-2 py-0.5 rounded-md bg-red-500/20 text-red-400";
+          badge.textContent = "INVALID";
         }
-        setStoredData("PEGAWAI_DATA", pegawaiList);
-        renderPegawaiTable();
-        document.getElementById("form-pegawai").reset();
-        showToast("Pegawai berhasil disimpan ke database!", "success");
       }
 
-      function toggleStatusPegawai(id_pegawai) {
-        const p = pegawaiList.find((item) => item.id_pegawai === id_pegawai);
-        if (!p) return;
-        p.status = p.status === "Aktif" ? "Nonaktif" : "Aktif";
-        requestGAS("savePegawai", p, "POST");
-        setStoredData("PEGAWAI_DATA", pegawaiList);
-        renderPegawaiTable();
-        showToast(
-          "Status " + p.nama_lengkap + " diubah menjadi " + p.status,
-          "info",
-        );
-      }
-
-      // 6. Pegawai Portal: Pemindai QR & Riwayat
-      function renderPegawaiPortal() {
+      // -------------------------------------------------------------
+      // LOGIKA PRESENSI CERDAS & PENGUNCIAN TOMBOL
+      // -------------------------------------------------------------
+      function updatePegawaiTodayStatus() {
         if (!currentUser) return;
-
-        document.getElementById("user-display-nama").textContent =
-          currentUser.nama_lengkap;
-        document.getElementById("user-display-email").textContent =
-          currentUser.email;
-        document.getElementById("user-display-jabatan").textContent =
-          currentUser.jabatan;
-
-        const now = getNowWIT();
-        const myTodayPresensi = presensiHistory.filter(
+        const today = getTodayStringWIT();
+        const myToday = presensiList.filter(
           (p) =>
             p.email_pegawai.toLowerCase() === currentUser.email.toLowerCase() &&
-            p.tanggal === now.tanggal,
+            p.tanggal === today,
         );
 
-        const statusEl = document.getElementById("user-today-status");
-        if (myTodayPresensi.length === 0) {
-          statusEl.textContent = "Belum Presensi";
-          statusEl.className = "text-sm font-bold text-slate-400";
+        const hasMasuk = myToday.find((p) => p.tipe === "Masuk");
+        const hasPulang = myToday.find((p) => p.tipe === "Pulang");
+
+        const statusEl = document.getElementById("pegawai-today-status");
+        const btnMasuk = document.getElementById("btn-presensi-masuk");
+        const textMasuk = document.getElementById("text-presensi-masuk");
+        const btnPulang = document.getElementById("btn-presensi-pulang");
+        const textPulang = document.getElementById("text-presensi-pulang");
+
+        // Cek jam kerja WIT sekarang
+        const now = new Date();
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+        const wit = new Date(utc + 3600000 * 9);
+        const curHour = wit.getHours();
+        const curMin = wit.getMinutes();
+        const curMinutes = curHour * 60 + curMin;
+        const isAfterPulang = curMinutes >= 16 * 60; // 16:00 WIT
+        const allowEarly = document.getElementById(
+          "check-early-departure",
+        )?.checked;
+
+        if (hasMasuk && hasPulang) {
+          statusEl.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> Presensi Hari Ini Lengkap (${hasMasuk.waktu_wit} & ${hasPulang.waktu_wit} WIT)</span>`;
+          btnMasuk.disabled = true;
+          textMasuk.textContent = `Presensi Masuk Terkunci (${hasMasuk.waktu_wit} WIT)`;
+          btnPulang.disabled = true;
+          textPulang.textContent = `Presensi Pulang Terkunci (${hasPulang.waktu_wit} WIT)`;
+        } else if (hasMasuk) {
+          statusEl.innerHTML = `<span class="text-blue-400"><i class="fa-solid fa-clock"></i> Sudah Masuk (${hasMasuk.waktu_wit} WIT) - Menunggu Jam Pulang</span>`;
+          btnMasuk.disabled = true;
+          textMasuk.textContent = `Presensi Masuk Terkunci (${hasMasuk.waktu_wit} WIT)`;
+
+          if (isAfterPulang || allowEarly) {
+            btnPulang.disabled = !detectedKantor;
+            textPulang.textContent = "Presensi Pulang Sekarang (WIT)";
+          } else {
+            btnPulang.disabled = true;
+            textPulang.textContent = "Belum Jam Kepulangan Kantor (16:00 WIT)";
+          }
         } else {
-          const types = myTodayPresensi.map((p) => p.tipe).join(" & ");
-          statusEl.textContent = "Sudah: " + types;
-          statusEl.className = "text-sm font-bold text-emerald-400";
+          statusEl.innerHTML = `<span class="text-amber-400"><i class="fa-regular fa-clock"></i> Belum Presensi Masuk Hari Ini</span>`;
+          btnMasuk.disabled = !detectedKantor;
+          textMasuk.textContent = "Presensi Masuk (Jam Masuk: 08:00 WIT)";
+          btnPulang.disabled = true;
+          textPulang.textContent = "Presensi Pulang (Terkunci Sebelum Masuk)";
         }
-
-        renderUserHistory();
-        renderQuickQrChips();
-        startScanner();
       }
 
-      function renderUserHistory() {
-        const listEl = document.getElementById("user-history-list");
-        const countEl = document.getElementById("user-history-count");
-        const myHistory = presensiHistory.filter(
-          (p) =>
-            p.email_pegawai.toLowerCase() === currentUser.email.toLowerCase(),
-        );
-        countEl.textContent = myHistory.length + " Catatan";
+      function handleEarlyDepartureChange() {
+        updatePegawaiTodayStatus();
+      }
 
-        if (myHistory.length === 0) {
-          listEl.innerHTML =
-            '<div class="text-center py-6 text-slate-500 text-xs">Belum ada riwayat presensi.</div>';
+      // Submit Presensi Masuk / Pulang
+      async function submitPegawaiPresensi(tipe) {
+        if (!detectedKantor) {
+          alert("Pindai QR Code kantor resmi terlebih dahulu!");
           return;
         }
 
-        listEl.innerHTML = myHistory
-          .map((p) => {
-            const isMasuk = p.tipe === "Masuk";
-            const ktr = kantorList.find((k) => k.id_kantor === p.id_kantor);
-            const namaKantor = ktr ? ktr.nama_kantor : p.id_kantor;
-
-            return [
-              '<div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-between">',
-              "<div>",
-              '<div class="flex items-center gap-2">',
-              '<span class="px-2 py-0.5 rounded text-[10px] font-bold ' +
-                (isMasuk
-                  ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-amber-500/20 text-amber-400") +
-                '">' +
-                p.tipe +
-                "</span>",
-              '<span class="text-xs font-mono font-bold text-white">' +
-                p.waktu_wit +
-                " WIT</span>",
-              "</div>",
-              '<div class="text-xs text-slate-300 font-medium mt-1">' +
-                namaKantor +
-                "</div>",
-              '<div class="text-[10px] text-slate-500">' +
-                p.tanggal +
-                " - " +
-                p.id_presensi +
-                "</div>",
-              "</div>",
-              '<div class="text-emerald-400 text-lg"><i class="fa-solid fa-circle-check"></i></div>',
-              "</div>",
-            ].join("");
-          })
-          .join("");
-      }
-
-      function renderQuickQrChips() {
-        const container = document.getElementById("quick-qr-chips");
-        container.innerHTML = kantorList
-          .map((k) =>
-            [
-              "<button onclick=\"onScanSuccess('" +
-                k.id_kantor +
-                '\')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-amber-500/20 hover:text-amber-300 border border-slate-700 text-slate-300 text-[11px] transition-all flex items-center gap-1 cursor-pointer">',
-              '<i class="fa-solid fa-building text-[10px]"></i>',
-              "<span>" + k.nama_kantor.split("(")[0].trim() + "</span>",
-              "</button>",
-            ].join(""),
-          )
-          .join("");
-      }
-
-      function startScanner() {
-        const qrRegionId = "qr-reader";
-        if (!document.getElementById(qrRegionId)) return;
-
-        if (html5QrCodeScanner) {
-          try {
-            html5QrCodeScanner.stop();
-          } catch (e) {}
-        }
-
-        html5QrCodeScanner = new Html5Qrcode(qrRegionId);
-        const config = { fps: 10, qrbox: { width: 220, height: 220 } };
-
-        html5QrCodeScanner
-          .start(
-            { facingMode: "environment" },
-            config,
-            (decodedText) => onScanSuccess(decodedText),
-            (errorMessage) => {},
-          )
-          .catch((err) => {
-            console.warn("Camera start warning:", err);
-          });
-      }
-
-      function stopScanner() {
-        if (html5QrCodeScanner) {
-          html5QrCodeScanner
-            .stop()
-            .then(() => {
-              showToast("Kamera dinonaktifkan.", "info");
-            })
-            .catch((err) => console.log(err));
-        }
-      }
-
-      function onScanSuccess(decodedText) {
-        const scannedId = decodedText.trim();
-        const kantor = kantorList.find(
-          (k) => k.id_kantor === scannedId || k.qr_code_data === scannedId,
-        );
-
-        detectedKantor = kantor || {
-          id_kantor: scannedId,
-          nama_kantor: "Lokasi Diskominfo Maybrat (" + scannedId + ")",
-          alamat: "Area Terverifikasi Diskominfo",
-        };
-
-        const box = document.getElementById("detected-kantor-box");
-        box.innerHTML = [
-          '<div class="text-left space-y-1">',
-          '<div class="flex items-center justify-between">',
-          '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">TERVERIFIKASI</span>',
-          '<span class="text-xs font-mono text-amber-400">' +
-            detectedKantor.id_kantor +
-            "</span>",
-          "</div>",
-          '<div class="text-sm font-bold text-white">' +
-            detectedKantor.nama_kantor +
-            "</div>",
-          '<div class="text-xs text-slate-400 leading-tight">' +
-            detectedKantor.alamat +
-            "</div>",
-          "</div>",
-        ].join("");
-        box.className =
-          "p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/50 shadow-inner";
-
-        document.getElementById("btn-presensi-masuk").disabled = false;
-        document.getElementById("btn-presensi-pulang").disabled = false;
-
-        showToast("Lokasi Terpindai: " + detectedKantor.nama_kantor, "success");
-      }
-
-      async function submitPresensi(tipe) {
-        if (!currentUser || !detectedKantor) {
-          showToast("Pindai QR Code kantor terlebih dahulu!", "error");
+        // Validasi Radius Geofencing GPS
+        const maxRadius = detectedKantor.radius_meter || 100;
+        if (currentGpsDistance > maxRadius) {
+          alert(
+            `PRESENSI DITOLAK! Anda berada di luar radius lokasi kantor Diskominfo (${currentGpsDistance}m). Toleransi maksimal adalah ${maxRadius} meter.`,
+          );
           return;
         }
 
-        const now = getNowWIT();
-        const id_presensi =
+        const today = getTodayStringWIT();
+        const waktuWit = getNowTimeWIT();
+
+        // Hitung Status Kehadiran (Tepat Waktu vs Terlambat)
+        let statusKehadiran = "Tepat Waktu";
+        if (tipe === "Masuk") {
+          const parts = waktuWit.split(":").map(Number);
+          const mins = parts[0] * 60 + parts[1];
+          const lateThreshold = 8 * 60 + 15; // 08:15 WIT
+          if (mins > lateThreshold) {
+            const terlambatMins = mins - 8 * 60;
+            statusKehadiran = `Terlambat (${terlambatMins} Menit)`;
+          }
+        } else {
+          statusKehadiran = "Pulang Kerja";
+        }
+
+        const idPresensi =
           "PRS-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-
-        const newRecord = {
-          id_presensi,
+        const payload = {
+          id_presensi: idPresensi,
           email_pegawai: currentUser.email,
           nama_pegawai: currentUser.nama_lengkap,
           id_kantor: detectedKantor.id_kantor,
-          tanggal: now.tanggal,
-          waktu_wit: now.waktu_wit,
-          tipe,
+          nama_kantor: detectedKantor.nama_kantor,
+          tanggal: today,
+          waktu_wit: waktuWit,
+          tipe: tipe,
+          status_kehadiran: statusKehadiran,
+          jarak_gps: currentGpsDistance,
         };
 
-        showToast(
-          "Menyimpan presensi " + tipe + " ke Google Sheets...",
-          "info",
-        );
-
-        // Kirim ke Google Apps Script
-        requestGAS("savePresensi", newRecord, "POST");
-
         // Simpan lokal
-        presensiHistory = [newRecord, ...presensiHistory];
-        setStoredData("PRESENSI_DATA", presensiHistory);
+        presensiList.unshift(payload);
+        setStoredData("MAYBRAT_PRESENSI", presensiList);
 
-        showToast(
-          "Presensi " +
-            tipe +
-            " berhasil dicatat pada " +
-            now.waktu_wit +
-            " WIT!",
-          "success",
+        // Simpan ke GAS
+        if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
+          try {
+            requestGAS("savePresensi", payload, "POST");
+          } catch (e) {}
+        }
+
+        alert(
+          `Presensi ${tipe} berhasil dicatat!\nWaktu: ${waktuWit} WIT\nStatus: ${statusKehadiran}\nJarak GPS: ${currentGpsDistance}m`,
         );
-        renderPegawaiPortal();
+        updatePegawaiTodayStatus();
+        renderPegawaiHistory();
       }
 
-      function exportRekapCSV() {
-        if (presensiHistory.length === 0) {
-          showToast("Tidak ada data untuk diekspor", "error");
+      // -------------------------------------------------------------
+      // MODUL PENGAJUAN IZIN / SAKIT / CUTI
+      // -------------------------------------------------------------
+      async function handlePengajuanIzinSubmit(e) {
+        e.preventDefault();
+        const jenisRadio = document.querySelector(
+          'input[name="radio-jenis-izin"]:checked',
+        );
+        const jenis = jenisRadio ? jenisRadio.value : "Izin";
+        const tglMulai = document.getElementById("izin-tgl-mulai").value;
+        const tglSelesai = document.getElementById("izin-tgl-selesai").value;
+        const keterangan = document
+          .getElementById("izin-keterangan")
+          .value.trim();
+
+        const idIzin =
+          "IZN-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        const payload = {
+          id_izin: idIzin,
+          email_pegawai: currentUser.email,
+          nama_pegawai: currentUser.nama_lengkap,
+          jenis_izin: jenis,
+          keterangan: `${keterangan} (Periode: ${tglMulai} s/d ${tglSelesai})`,
+          tanggal_pengajuan: getTodayStringWIT(),
+          status_approval: "Menunggu",
+        };
+
+        izinList.unshift(payload);
+        setStoredData("MAYBRAT_IZIN", izinList);
+
+        if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
+          try {
+            requestGAS("saveIzin", payload, "POST");
+          } catch (e) {}
+        }
+
+        alert(
+          `Pengajuan ${jenis} berhasil dikirim ke Administrator Diskominfo Maybrat!`,
+        );
+        document.getElementById("izin-keterangan").value = "";
+        renderPegawaiIzinList();
+      }
+
+      function renderPegawaiIzinList() {
+        const container = document.getElementById("pegawai-izin-list");
+        if (!container || !currentUser) return;
+
+        const myIzin = izinList.filter(
+          (i) =>
+            i.email_pegawai.toLowerCase() === currentUser.email.toLowerCase(),
+        );
+        if (myIzin.length === 0) {
+          container.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs">Belum ada pengajuan izin.</div>`;
           return;
         }
 
-        let csv =
-          "id_presensi,email_pegawai,nama_pegawai,id_kantor,tanggal,waktu_wit,tipe\n";
-        presensiHistory.forEach((r) => {
-          csv +=
-            '"' +
-            r.id_presensi +
-            '","' +
-            r.email_pegawai +
-            '","' +
-            r.nama_pegawai +
-            '","' +
-            r.id_kantor +
-            '","' +
-            r.tanggal +
-            '","' +
-            r.waktu_wit +
-            '","' +
-            r.tipe +
-            '"\n';
-        });
-
-        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute(
-          "download",
-          "Rekap_Presensi_Diskominfo_Maybrat_" + getNowWIT().tanggal + ".csv",
-        );
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showToast("File CSV Rekap Presensi berhasil diunduh!", "success");
+        container.innerHTML = myIzin
+          .map(
+            (item) => `
+        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white">${item.jenis_izin}</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+              item.status_approval === "Disetujui"
+                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                : item.status_approval === "Ditolak"
+                  ? "bg-red-500/20 text-red-400 border-red-500/30"
+                  : "bg-amber-500/20 text-amber-400 border-amber-500/30"
+            }">${item.status_approval}</span>
+          </div>
+          <p class="text-slate-300">${item.keterangan}</p>
+          <div class="text-[10px] text-slate-500">${item.tanggal_pengajuan}</div>
+        </div>
+      `,
+          )
+          .join("");
       }
 
-      function showToast(message, type = "info") {
-        const toast = document.getElementById("toast");
-        const colors = {
-          success: "bg-emerald-600 text-white",
-          error: "bg-red-600 text-white",
-          info: "bg-slate-800 border border-amber-500/40 text-amber-300",
+      // -------------------------------------------------------------
+      // SCANNER KAMERA PEGAWAI (html5-qrcode)
+      // -------------------------------------------------------------
+      async function startPegawaiScanner() {
+        try {
+          if (html5QrScanner) {
+            try {
+              await html5QrScanner.stop();
+            } catch (e) {}
+          }
+          html5QrScanner = new Html5Qrcode("html5-scanner-viewport");
+          await html5QrScanner.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 220, height: 220 } },
+            (decoded) => handleScanSuccess(decoded),
+            () => {},
+          );
+        } catch (err) {
+          console.warn("Scanner camera error:", err);
+          const errBanner = document.getElementById("camera-error-banner");
+          if (errBanner) {
+            errBanner.textContent =
+              "Kamera tidak dapat diakses atau izin ditolak. Silakan gunakan tombol simulasi lokasi kantor di bawah.";
+            errBanner.classList.remove("hidden");
+          }
+        }
+      }
+
+      async function stopPegawaiScanner() {
+        if (html5QrScanner) {
+          try {
+            await html5QrScanner.stop();
+          } catch (e) {}
+        }
+      }
+
+      function handleScanSuccess(decodedText) {
+        const clean = decodedText.trim();
+        const matched = kantorList.find(
+          (k) =>
+            k.id_kantor.toLowerCase() === clean.toLowerCase() ||
+            k.qr_code_data.toLowerCase() === clean.toLowerCase(),
+        );
+        if (matched) {
+          detectedKantor = matched;
+        } else {
+          detectedKantor = {
+            id_kantor: clean,
+            nama_kantor: `Titik Kantor (${clean})`,
+            latitude: KUMURKEK_CENTER.lat,
+            longitude: KUMURKEK_CENTER.lng,
+            radius_meter: 100,
+          };
+        }
+
+        const box = document.getElementById("box-detected-kantor");
+        if (box) {
+          box.className =
+            "p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 text-left space-y-1";
+          box.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">${detectedKantor.id_kantor}</span>
+            <span class="text-[10px] font-bold text-emerald-400">QR Valid</span>
+          </div>
+          <div class="text-sm font-bold text-white">${detectedKantor.nama_kantor}</div>
+          <div class="text-[11px] text-slate-400">${detectedKantor.alamat || "Kumurkek, Maybrat"}</div>
+        `;
+        }
+
+        updateGpsDistance();
+        updatePegawaiTodayStatus();
+      }
+
+      function renderPegawaiQuickKantorButtons() {
+        const container = document.getElementById(
+          "pegawai-quick-kantor-buttons",
+        );
+        if (!container) return;
+        container.innerHTML = kantorList
+          .map(
+            (k) => `
+        <button onclick="handleScanSuccess('${k.id_kantor}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
+          <i class="fa-solid fa-building mr-1 text-amber-400"></i> ${k.nama_kantor.split("(")[0].trim()}
+        </button>
+      `,
+          )
+          .join("");
+      }
+
+      function renderPegawaiHistory() {
+        const tbody = document.getElementById("pegawai-history-table-body");
+        if (!tbody || !currentUser) return;
+        const myHistory = presensiList.filter(
+          (p) =>
+            p.email_pegawai.toLowerCase() === currentUser.email.toLowerCase(),
+        );
+        if (myHistory.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500">Belum ada catatan presensi.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = myHistory
+          .map(
+            (row) => `
+        <tr class="hover:bg-slate-800/40">
+          <td class="py-2.5 px-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${row.tipe === "Masuk" ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-500/20 text-blue-400"}">${row.tipe}</span>
+          </td>
+          <td class="py-2.5 px-3">
+            <div class="font-bold text-white">${row.tanggal}</div>
+            <div class="text-[10px] text-amber-400 font-mono">${row.waktu_wit} WIT</div>
+          </td>
+          <td class="py-2.5 px-3">${row.status_kehadiran || "Tepat Waktu"}</td>
+          <td class="py-2.5 px-3 text-slate-300">${row.nama_kantor || row.id_kantor}</td>
+          <td class="py-2.5 px-3 font-mono">${row.jarak_gps !== undefined ? row.jarak_gps + "m" : "-"}</td>
+        </tr>
+      `,
+          )
+          .join("");
+      }
+
+      // -------------------------------------------------------------
+      // RENDER TABEL ADMIN REKAP & APPROVAL IZIN
+      // -------------------------------------------------------------
+      function renderRekapTable() {
+        const tbody = document.getElementById("rekap-table-body");
+        if (!tbody) return;
+
+        const filterDate =
+          document.getElementById("filter-rekap-date")?.value || "";
+        const filterType =
+          document.getElementById("filter-rekap-type")?.value || "ALL";
+        const search = (
+          document.getElementById("search-rekap")?.value || ""
+        ).toLowerCase();
+
+        const filtered = presensiList.filter((p) => {
+          if (filterDate && p.tanggal !== filterDate) return false;
+          if (filterType !== "ALL" && p.tipe !== filterType) return false;
+          if (search) {
+            const matchNama = (p.nama_pegawai || "")
+              .toLowerCase()
+              .includes(search);
+            const matchEmail = (p.email_pegawai || "")
+              .toLowerCase()
+              .includes(search);
+            if (!matchNama && !matchEmail) return false;
+          }
+          return true;
+        });
+
+        // Update counters
+        const today = getTodayStringWIT();
+        const todayAll = presensiList.filter((p) => p.tanggal === today);
+        document.getElementById("stat-today-total").textContent =
+          todayAll.length;
+        document.getElementById("stat-today-masuk").textContent =
+          todayAll.filter((p) => p.tipe === "Masuk").length;
+        document.getElementById("stat-today-pulang").textContent =
+          todayAll.filter((p) => p.tipe === "Pulang").length;
+        document.getElementById("stat-total-pegawai").textContent =
+          pegawaiList.length;
+
+        const lateCount = todayAll.filter(
+          (p) =>
+            p.tipe === "Masuk" &&
+            (p.status_kehadiran || "").includes("Terlambat"),
+        ).length;
+        document.getElementById("stat-late-count").textContent =
+          lateCount > 0 ? `${lateCount} terlambat` : "Semua tepat waktu";
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-500">Tidak ada catatan presensi yang cocok.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = filtered
+          .map(
+            (row) => `
+        <tr class="hover:bg-slate-800/40">
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${row.tipe === "Masuk" ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-500/20 text-blue-400"}">${row.tipe}</span>
+            <span class="font-mono text-[10px] text-slate-500 ml-1.5">${row.id_presensi}</span>
+          </td>
+          <td class="py-3 px-4">
+            <div class="font-bold text-white">${row.nama_pegawai}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${row.email_pegawai}</div>
+          </td>
+          <td class="py-3 px-4">
+            <div>${row.tanggal}</div>
+            <div class="text-[10px] font-mono text-amber-400 font-bold">${row.waktu_wit} WIT</div>
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+              (row.status_kehadiran || "").includes("Terlambat")
+                ? "bg-rose-500/20 text-rose-300"
+                : "bg-emerald-500/20 text-emerald-300"
+            }">${row.status_kehadiran || "Tepat Waktu"}</span>
+          </td>
+          <td class="py-3 px-4 text-slate-300">${row.nama_kantor || row.id_kantor}</td>
+          <td class="py-3 px-4 font-mono">${row.jarak_gps !== undefined ? row.jarak_gps + "m" : "-"}</td>
+        </tr>
+      `,
+          )
+          .join("");
+      }
+
+      function renderIzinTable() {
+        const tbody = document.getElementById("izin-table-body");
+        if (!tbody) return;
+
+        const pendingCount = izinList.filter(
+          (i) => i.status_approval === "Menunggu",
+        ).length;
+        const badge = document.getElementById("badge-izin-pending");
+        if (badge) {
+          if (pendingCount > 0) {
+            badge.textContent = pendingCount;
+            badge.classList.remove("hidden");
+          } else {
+            badge.classList.add("hidden");
+          }
+        }
+
+        if (izinList.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-500">Belum ada data pengajuan izin.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = izinList
+          .map(
+            (row) => `
+        <tr class="hover:bg-slate-800/40">
+          <td class="py-3 px-4">
+            <div class="font-bold text-white">${row.nama_pegawai}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${row.email_pegawai}</div>
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+              row.jenis_izin === "Sakit"
+                ? "bg-rose-500/20 text-rose-400"
+                : row.jenis_izin === "Cuti"
+                  ? "bg-purple-500/20 text-purple-400"
+                  : "bg-amber-500/20 text-amber-400"
+            }">${row.jenis_izin}</span>
+            <div class="text-[10px] text-slate-400 mt-1">${row.tanggal_pengajuan}</div>
+          </td>
+          <td class="py-3 px-4 max-w-xs text-slate-300">${row.keterangan}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+              row.status_approval === "Disetujui"
+                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                : row.status_approval === "Ditolak"
+                  ? "bg-red-500/20 text-red-400 border-red-500/30"
+                  : "bg-amber-500/20 text-amber-400 border-amber-500/30"
+            }">${row.status_approval}</span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="updateIzinApproval('${row.id_izin}', 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold">
+                <i class="fa-solid fa-check"></i> Setujui
+              </button>
+              <button onclick="updateIzinApproval('${row.id_izin}', 'Ditolak')" class="px-2.5 py-1 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-bold">
+                <i class="fa-solid fa-xmark"></i> Tolak
+              </button>
+            </div>
+          </td>
+        </tr>
+      `,
+          )
+          .join("");
+      }
+
+      async function updateIzinApproval(id_izin, status) {
+        const item = izinList.find((i) => i.id_izin === id_izin);
+        if (item) {
+          item.status_approval = status;
+          setStoredData("MAYBRAT_IZIN", izinList);
+        }
+
+        if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
+          try {
+            requestGAS(
+              "updateIzinStatus",
+              { id_izin, status_approval: status },
+              "POST",
+            );
+          } catch (e) {}
+        }
+        renderIzinTable();
+      }
+
+      function renderKantorCards() {
+        const container = document.getElementById("kantor-cards-container");
+        if (!container) return;
+        container.innerHTML = kantorList
+          .map(
+            (k) => `
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded inline-block">${k.id_kantor}</div>
+              <h4 class="text-xs font-bold text-white mt-1">${k.nama_kantor}</h4>
+              <p class="text-[11px] text-slate-400">${k.alamat}</p>
+              <p class="text-[10px] text-slate-500 font-mono mt-0.5">Radius: ${k.radius_meter || 100}m • Lat: ${k.latitude}, Lng: ${k.longitude}</p>
+            </div>
+            <div id="qrcode-${k.id_kantor}" class="bg-white p-1.5 rounded-lg shrink-0"></div>
+          </div>
+          <button onclick="printKantorQR('${k.id_kantor}', '${k.nama_kantor}')" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-700">
+            <i class="fa-solid fa-print"></i> Cetak QR Code
+          </button>
+        </div>
+      `,
+          )
+          .join("");
+
+        // Generate QR Images
+        kantorList.forEach((k) => {
+          const el = document.getElementById(`qrcode-${k.id_kantor}`);
+          if (el) {
+            el.innerHTML = "";
+            new QRCode(el, { text: k.id_kantor, width: 68, height: 68 });
+          }
+        });
+      }
+
+      function printKantorQR(id_kantor, nama_kantor) {
+        const printArea = document.getElementById("print-area");
+        printArea.innerHTML = `
+        <div style="text-align: center; padding: 40px; font-family: sans-serif;">
+          <h2>DINAS KOMUNIKASI DAN INFORMATIKA</h2>
+          <h3>KABUPATEN MAYBRAT - PAPUA BARAT DAYA</h3>
+          <hr style="margin: 20px 0;"/>
+          <h4>TITIK PRESENSI RESMI</h4>
+          <h1>${nama_kantor}</h1>
+          <p>ID: ${id_kantor}</p>
+          <div id="print-qr" style="display: inline-block; margin: 20px auto; padding: 10px; border: 2px solid #000;"></div>
+          <p>Silakan pindai QR Code ini menggunakan aplikasi Sistem Presensi Digital Diskominfo Maybrat.</p>
+        </div>
+      `;
+        new QRCode(document.getElementById("print-qr"), {
+          text: id_kantor,
+          width: 250,
+          height: 250,
+        });
+        setTimeout(() => window.print(), 500);
+      }
+
+      function renderPegawaiTable() {
+        const tbody = document.getElementById("pegawai-table-body");
+        if (!tbody) return;
+        tbody.innerHTML = pegawaiList
+          .map(
+            (row) => `
+        <tr class="hover:bg-slate-800/40">
+          <td class="py-3 px-4">
+            <div class="font-bold text-white">${row.nama_lengkap}</div>
+            <div class="text-[10px] text-slate-500 font-mono">${row.id_pegawai}</div>
+          </td>
+          <td class="py-3 px-4 font-mono text-slate-300">${row.email}</td>
+          <td class="py-3 px-4 text-slate-300">${row.jabatan}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${row.role === "Admin" ? "bg-amber-500/20 text-amber-400" : "bg-blue-500/20 text-blue-400"}">${row.role}</span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${row.status === "Aktif" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}">${row.status}</span>
+          </td>
+        </tr>
+      `,
+          )
+          .join("");
+      }
+
+      async function handleSaveKantor(e) {
+        e.preventDefault();
+        const id = document.getElementById("kantor-id").value.trim();
+        const nama = document.getElementById("kantor-nama").value.trim();
+        const alamat = document.getElementById("kantor-alamat").value.trim();
+        const lat =
+          parseFloat(document.getElementById("kantor-lat").value) ||
+          KUMURKEK_CENTER.lat;
+        const lng =
+          parseFloat(document.getElementById("kantor-lng").value) ||
+          KUMURKEK_CENTER.lng;
+        const radius =
+          parseFloat(document.getElementById("kantor-radius").value) || 100;
+
+        const newKtr = {
+          id_kantor: id,
+          nama_kantor: nama,
+          alamat: alamat,
+          latitude: lat,
+          longitude: lng,
+          radius_meter: radius,
+          qr_code_data: id,
+          created_at: new Date().toISOString(),
         };
 
-        toast.className =
-          "fixed top-20 right-4 z-50 transition-all duration-300 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium " +
-          (colors[type] || colors.info);
-        toast.innerHTML = [
-          '<i class="fa-solid ' +
-            (type === "success"
-              ? "fa-circle-check"
-              : type === "error"
-                ? "fa-triangle-exclamation"
-                : "fa-circle-info") +
-            '"></i>',
-          "<span>" + message + "</span>",
-        ].join("");
+        kantorList = [newKtr, ...kantorList.filter((k) => k.id_kantor !== id)];
+        setStoredData("MAYBRAT_KANTOR", kantorList);
 
-        setTimeout(() => {
-          toast.className =
-            "fixed top-20 right-4 z-50 transform translate-x-full transition-transform duration-300";
-        }, 4000);
+        if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
+          try {
+            requestGAS("saveKantor", newKtr, "POST");
+          } catch (e) {}
+        }
+
+        alert("Data kantor & QR Code berhasil disimpan!");
+        renderKantorCards();
+        document.getElementById("form-kantor").reset();
+      }
+
+      async function handleSavePegawai(e) {
+        e.preventDefault();
+        const id = document.getElementById("pegawai-id").value.trim();
+        const nama = document.getElementById("pegawai-nama").value.trim();
+        const email = document
+          .getElementById("pegawai-email")
+          .value.trim()
+          .toLowerCase();
+        const role = document.getElementById("pegawai-role").value;
+        const status = document.getElementById("pegawai-status").value;
+        const jabatan = document.getElementById("pegawai-jabatan").value.trim();
+        const pin = document.getElementById("pegawai-pin").value.trim();
+
+        const newPeg = {
+          id_pegawai: id,
+          nama_lengkap: nama,
+          email: email,
+          role: role,
+          status: status,
+          jabatan: jabatan,
+          pin: pin,
+        };
+
+        const idx = pegawaiList.findIndex(
+          (p) => p.email.toLowerCase() === email,
+        );
+        if (idx >= 0) pegawaiList[idx] = newPeg;
+        else pegawaiList.push(newPeg);
+
+        setStoredData("MAYBRAT_PEGAWAI", pegawaiList);
+
+        if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
+          try {
+            requestGAS("savePegawai", newPeg, "POST");
+          } catch (e) {}
+        }
+
+        alert("Data pegawai berhasil disimpan!");
+        renderPegawaiTable();
+        document.getElementById("form-pegawai").reset();
+      }
+
+      function switchAdminTab(tab) {
+        ["rekap", "izin", "kantor", "pegawai"].forEach((t) => {
+          document.getElementById(`admin-tab-${t}`).classList.add("hidden");
+          const btn = document.getElementById(`tab-btn-${t}`);
+          if (btn) {
+            btn.className =
+              "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-slate-800 whitespace-nowrap";
+          }
+        });
+
+        document.getElementById(`admin-tab-${tab}`).classList.remove("hidden");
+        const activeBtn = document.getElementById(`tab-btn-${tab}`);
+        if (activeBtn) {
+          activeBtn.className =
+            "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 shadow-md shadow-amber-500/20 whitespace-nowrap";
+        }
+      }
+
+      function switchPegawaiTab(tab) {
+        ["presensi", "izin", "riwayat"].forEach((t) => {
+          document
+            .getElementById(`pegawai-subtab-${t}`)
+            .classList.add("hidden");
+          const btn = document.getElementById(`ptab-btn-${t}`);
+          if (btn) {
+            btn.className =
+              "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-slate-900 text-slate-300 hover:text-white transition-all flex items-center gap-2 border border-slate-800";
+          }
+        });
+
+        document
+          .getElementById(`pegawai-subtab-${tab}`)
+          .classList.remove("hidden");
+        const activeBtn = document.getElementById(`ptab-btn-${tab}`);
+        if (activeBtn) {
+          activeBtn.className =
+            "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 shadow-md";
+        }
+
+        if (tab === "presensi") {
+          startPegawaiScanner();
+        } else {
+          stopPegawaiScanner();
+        }
+      }
+
+      function switchToPegawaiView() {
+        document.getElementById("view-admin").classList.add("hidden");
+        document.getElementById("view-pegawai").classList.remove("hidden");
+        renderPegawaiQuickKantorButtons();
+        renderPegawaiHistory();
+        renderPegawaiIzinList();
+        updatePegawaiTodayStatus();
+        startPegawaiScanner();
+      }
+
+      // Ekspor CSV
+      function exportRekapCSV() {
+        if (presensiList.length === 0) return;
+        let csv =
+          "id_presensi,email_pegawai,nama_pegawai,id_kantor,nama_kantor,tanggal,waktu_wit,tipe,status_kehadiran,jarak_gps\n";
+        presensiList.forEach((r) => {
+          csv += `"${r.id_presensi}","${r.email_pegawai}","${r.nama_pegawai}","${r.id_kantor}","${r.nama_kantor || r.id_kantor}","${r.tanggal}","${r.waktu_wit}","${r.tipe}","${r.status_kehadiran || "Tepat Waktu"}","${r.jarak_gps || 0}"\n`;
+        });
+        downloadCSVFile(
+          csv,
+          `Rekap_Presensi_Diskominfo_Maybrat_${getTodayStringWIT()}.csv`,
+        );
+      }
+
+      function exportIzinCSV() {
+        if (izinList.length === 0) return;
+        let csv =
+          "id_izin,email_pegawai,nama_pegawai,jenis_izin,keterangan,tanggal_pengajuan,status_approval\n";
+        izinList.forEach((r) => {
+          csv += `"${r.id_izin}","${r.email_pegawai}","${r.nama_pegawai}","${r.jenis_izin}","${(r.keterangan || "").replace(/"/g, '""')}","${r.tanggal_pengajuan}","${r.status_approval}"\n`;
+        });
+        downloadCSVFile(
+          csv,
+          `Rekap_Izin_Pegawai_Maybrat_${getTodayStringWIT()}.csv`,
+        );
+      }
+
+      function downloadCSVFile(content, filename) {
+        const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       }
     </script>
   </body>
