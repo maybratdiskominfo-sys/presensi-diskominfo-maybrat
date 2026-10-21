@@ -311,14 +311,14 @@
               </div>
             </button>
             <button
-              onclick="quickFillLogin('yohanes.way@maybratkab.go.id', '123456')"
+              onclick="quickFillLogin('anjellofanataf@gmail.com', '123456')"
               class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-left border border-slate-700"
             >
               <div class="font-semibold text-blue-400">
                 <i class="fa-solid fa-user mr-1"></i> Pegawai
               </div>
               <div class="text-slate-400 truncate">
-                yohanes.way@maybratkab.go.id
+                anjellofanataf@gmail.com
               </div>
             </button>
           </div>
@@ -1000,7 +1000,7 @@
               <div class="mt-4 flex items-center justify-center gap-2">
                 <button
                   onclick="startPegawaiScanner()"
-                  class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5"
+                  class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-md"
                 >
                   <i class="fa-solid fa-camera"></i> Buka Kamera
                 </button>
@@ -1010,20 +1010,67 @@
                 >
                   <i class="fa-solid fa-pause"></i> Jeda Kamera
                 </button>
+                <input
+                  type="file"
+                  id="input-file-qr"
+                  onchange="handleFileQrUpload(event)"
+                  accept="image/*"
+                  class="hidden"
+                />
+                <button
+                  onclick="document.getElementById('input-file-qr').click()"
+                  class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-amber-400/30"
+                >
+                  <i class="fa-solid fa-qrcode text-amber-400"></i> Unggah
+                  Berkas QR
+                </button>
               </div>
             </div>
 
-            <!-- Quick Test Buttons -->
-            <div class="pt-4 border-t border-slate-800/80">
+            <!-- Protokol Integritas Presensi Resmi (Fitur Pilih Titik Manual Dihapus) -->
+            <div class="pt-4 border-t border-slate-800/80 space-y-2">
               <div
-                class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2"
+                class="flex items-center gap-2 text-xs font-bold text-amber-400"
               >
-                Simulasi Scan Titik Kantor:
+                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                <span>Protokol Keamanan Presensi Resmi Diskominfo Maybrat</span>
               </div>
               <div
-                id="pegawai-quick-kantor-buttons"
-                class="flex flex-wrap gap-2"
-              ></div>
+                class="p-3 bg-slate-950/70 border border-slate-800/80 rounded-2xl text-[11px] text-slate-400 space-y-1.5"
+              >
+                <div class="flex items-start gap-2">
+                  <span
+                    class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 font-bold text-[10px]"
+                    >1</span
+                  >
+                  <span
+                    ><b>Wajib Scan QR Fisik Kantor:</b> Pegawai harus memindai
+                    QR Code di lokasi titik presensi kantor. Pilihan kantor
+                    manual telah dinonaktifkan.</span
+                  >
+                </div>
+                <div class="flex items-start gap-2">
+                  <span
+                    class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 font-bold text-[10px]"
+                    >2</span
+                  >
+                  <span
+                    ><b>Validasi Geofencing GPS:</b> Posisi koordinat perangkat
+                    wajib berada di dalam radius kantor resmi (maks. 100
+                    meter).</span
+                  >
+                </div>
+                <div class="flex items-start gap-2">
+                  <span
+                    class="w-4 h-4 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 font-bold text-[10px]"
+                    >3</span
+                  >
+                  <span
+                    ><b>Proteksi Anti-Pendobelan:</b> Tombol presensi otomatis
+                    terkunci permanen setelah absensi tercatat hari ini.</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1327,31 +1374,6 @@
       let pollIntervalSeconds = 30;
       let pollCountdown = 30;
 
-      // Seed Data Kantor
-      const SEED_KANTOR = [
-        {
-          id_kantor: "KTR-DISKOMINFO-01",
-          nama_kantor: "Kantor Diskominfo Kab. Maybrat (Kumurkek)",
-          alamat:
-            "Jl. Poros Kumurkek - Ayamaru, Kompleks Kantor Bupati Maybrat",
-          latitude: -0.5512,
-          longitude: 132.4512,
-          radius_meter: 100,
-          qr_code_data: "KTR-DISKOMINFO-01",
-          created_at: new Date().toISOString(),
-        },
-        {
-          id_kantor: "KTR-DISKOMINFO-02",
-          nama_kantor: "Media Center & Layanan PPID",
-          alamat: "Gedung Media Center Diskominfo Maybrat, Kumurkek",
-          latitude: -0.5518,
-          longitude: 132.4508,
-          radius_meter: 100,
-          qr_code_data: "KTR-DISKOMINFO-02",
-          created_at: new Date().toISOString(),
-        },
-      ];
-
       // Seed Data Pegawai
       const SEED_PEGAWAI = [
         {
@@ -1365,8 +1387,8 @@
         },
         {
           id_pegawai: "PEG-002",
-          nama_lengkap: "Yohanes B. Way, S.Kom",
-          email: "yohanes.way@maybratkab.go.id",
+          nama_lengkap: "ANJELLO FANATAF S.Kom",
+          email: "anjellofanataf2026@gmail.com",
           role: "Pegawai",
           jabatan: "Pranata Komputer Ahli Muda",
           status: "Aktif",
@@ -1547,42 +1569,128 @@
         }
       }
 
+      // Helper Ekstraksi Data Respons Array GAS yang Tangguh
+      function extractArrayData(res) {
+        if (!res) return [];
+        if (Array.isArray(res)) return res;
+        if (res.data && Array.isArray(res.data)) return res.data;
+        if (res.result && Array.isArray(res.result)) return res.result;
+        if (res.items && Array.isArray(res.items)) return res.items;
+        return [];
+      }
+
+      // Helper Normalisasi Item Presensi
+      function normalizePresensiItem(p) {
+        if (!p) return null;
+        let rawTgl = p.tanggal || p.Tanggal || "";
+        return {
+          ...p,
+          id_presensi: String(
+            p.id_presensi ||
+              p.id ||
+              "PRS-" + Math.random().toString(36).substring(2, 8).toUpperCase(),
+          ),
+          email_pegawai: String(p.email_pegawai || p.email || "")
+            .toLowerCase()
+            .trim(),
+          nama_pegawai: String(p.nama_pegawai || p.nama || ""),
+          id_kantor: String(p.id_kantor || ""),
+          nama_kantor: String(
+            p.nama_kantor || p.id_kantor || "Kantor Diskominfo Kumurkek",
+          ),
+          tanggal: normalizeDateStr(rawTgl),
+          waktu_wit: String(p.waktu_wit || p.waktu || "").trim(),
+          tipe: String(p.tipe || "Masuk"),
+          status_kehadiran: String(p.status_kehadiran || "Tepat Waktu"),
+          jarak_gps: parseFloat(p.jarak_gps) || 0,
+        };
+      }
+
+      // Helper Normalisasi Format Tanggal ke 'YYYY-MM-DD'
+      function normalizeDateStr(raw) {
+        if (!raw) return "";
+        const str = String(raw).trim();
+        if (str.length >= 10 && /^\d{4}-\d{2}-\d{2}/.test(str)) {
+          return str.substring(0, 10);
+        }
+        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(str)) {
+          const p = str.split("/");
+          return `${p[2]}-${p[1].padStart(2, "0")}-${p[0].padStart(2, "0")}`;
+        }
+        const d = new Date(str);
+        if (!isNaN(d.getTime())) {
+          const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+          const wit = new Date(utc + 3600000 * 9);
+          const yyyy = wit.getFullYear();
+          const mm = String(wit.getMonth() + 1).padStart(2, "0");
+          const dd = String(wit.getDate()).padStart(2, "0");
+          return `${yyyy}-${mm}-${dd}`;
+        }
+        return str.substring(0, 10);
+      }
+
       async function triggerManualSync(isSilent = false) {
         const icon = document.getElementById("sync-spinner-icon");
+        const btn = document.getElementById("btn-manual-sync");
         if (icon) icon.classList.add("fa-spin");
+        if (btn) btn.disabled = true;
 
         try {
           if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
             const [ktrRes, pegRes, prsRes, iznRes] = await Promise.all([
               requestGAS("getKantorList"),
               requestGAS("getAllPegawai"),
-              requestGAS("getHistory"),
-              requestGAS("getIzinList"),
+              requestGAS("getHistory", { email: "" }),
+              requestGAS("getIzinList", { email: "" }),
             ]);
 
-            if (ktrRes && ktrRes.success && ktrRes.data) {
-              kantorList = ktrRes.data;
+            const rawKtr = extractArrayData(ktrRes);
+            if (rawKtr.length > 0) {
+              kantorList = rawKtr;
               setStoredData("MAYBRAT_KANTOR", kantorList);
             }
-            if (pegRes && pegRes.success && pegRes.data) {
-              pegawaiList = pegRes.data;
+
+            const rawPeg = extractArrayData(pegRes);
+            if (rawPeg.length > 0) {
+              pegawaiList = rawPeg;
               setStoredData("MAYBRAT_PEGAWAI", pegawaiList);
             }
-            if (prsRes && prsRes.success && prsRes.data) {
-              presensiList = prsRes.data;
+
+            const rawPrs = extractArrayData(prsRes);
+            if (rawPrs.length > 0) {
+              presensiList = rawPrs.map(normalizePresensiItem);
               setStoredData("MAYBRAT_PRESENSI", presensiList);
             }
-            if (iznRes && iznRes.success && iznRes.data) {
-              izinList = iznRes.data;
+
+            const rawIzn = extractArrayData(iznRes);
+            if (rawIzn.length > 0) {
+              izinList = rawIzn;
               setStoredData("MAYBRAT_IZIN", izinList);
             }
           }
+
+          // Pastikan seluruh data presensi lokal ter-normalisasi format tanggalnya
+          presensiList = presensiList.map(normalizePresensiItem);
+
+          // Langsung perbarui tabel & metrik statistik tanpa refresh halaman
           renderRekapTable();
           renderIzinTable();
+          renderKantorCards();
+          renderPegawaiTable();
+
+          if (!isSilent) {
+            alert(
+              `Sinkronisasi Google Sheets Berhasil!\n\n• ${presensiList.length} data riwayat presensi dimuat\n• ${pegawaiList.length} data pegawai dimuat\n• ${kantorList.length} data titik kantor terhubung`,
+            );
+          }
         } catch (e) {
           console.warn("Sync failed:", e);
+          if (!isSilent) {
+            alert("Gagal menyinkronkan data dari Google Sheets: " + e.message);
+          }
         } finally {
           if (icon) icon.classList.remove("fa-spin");
+          if (btn) btn.disabled = false;
           pollCountdown = 30;
         }
       }
@@ -1831,7 +1939,7 @@
       }
 
       // -------------------------------------------------------------
-      // LOGIKA PRESENSI CERDAS & PENGUNCIAN TOMBOL
+      // LOGIKA PRESENSI CERDAS & PENGUNCIAN TOMBOL KETAT
       // -------------------------------------------------------------
       function updatePegawaiTodayStatus() {
         if (!currentUser) return;
@@ -1839,7 +1947,7 @@
         const myToday = presensiList.filter(
           (p) =>
             p.email_pegawai.toLowerCase() === currentUser.email.toLowerCase() &&
-            p.tanggal === today,
+            p.tanggal.substring(0, 10) === today,
         );
 
         const hasMasuk = myToday.find((p) => p.tipe === "Masuk");
@@ -1863,30 +1971,77 @@
           "check-early-departure",
         )?.checked;
 
-        if (hasMasuk && hasPulang) {
-          statusEl.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> Presensi Hari Ini Lengkap (${hasMasuk.waktu_wit} & ${hasPulang.waktu_wit} WIT)</span>`;
-          btnMasuk.disabled = true;
-          textMasuk.textContent = `Presensi Masuk Terkunci (${hasMasuk.waktu_wit} WIT)`;
-          btnPulang.disabled = true;
-          textPulang.textContent = `Presensi Pulang Terkunci (${hasPulang.waktu_wit} WIT)`;
-        } else if (hasMasuk) {
-          statusEl.innerHTML = `<span class="text-blue-400"><i class="fa-solid fa-clock"></i> Sudah Masuk (${hasMasuk.waktu_wit} WIT) - Menunggu Jam Pulang</span>`;
-          btnMasuk.disabled = true;
-          textMasuk.textContent = `Presensi Masuk Terkunci (${hasMasuk.waktu_wit} WIT)`;
+        const maxRadius =
+          (detectedKantor && detectedKantor.radius_meter) || 100;
+        const isOutsideRadius = Boolean(
+          detectedKantor &&
+          currentGpsDistance !== null &&
+          currentGpsDistance > maxRadius,
+        );
 
-          if (isAfterPulang || allowEarly) {
-            btnPulang.disabled = !detectedKantor;
-            textPulang.textContent = "Presensi Pulang Sekarang (WIT)";
-          } else {
-            btnPulang.disabled = true;
-            textPulang.textContent = "Belum Jam Kepulangan Kantor (16:00 WIT)";
-          }
+        // Status Header Ringkas
+        if (hasMasuk && hasPulang) {
+          statusEl.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i> Presensi Hari Ini Lengkap (${hasMasuk.waktu_wit} & ${hasPulang.waktu_wit} WIT)</span>`;
+        } else if (hasMasuk) {
+          statusEl.innerHTML = `<span class="text-blue-400"><i class="fa-solid fa-clock mr-1"></i> Sudah Masuk (${hasMasuk.waktu_wit} WIT) • Menunggu Jam Pulang</span>`;
         } else {
-          statusEl.innerHTML = `<span class="text-amber-400"><i class="fa-regular fa-clock"></i> Belum Presensi Masuk Hari Ini</span>`;
-          btnMasuk.disabled = !detectedKantor;
-          textMasuk.textContent = "Presensi Masuk (Jam Masuk: 08:00 WIT)";
+          statusEl.innerHTML = `<span class="text-amber-400"><i class="fa-regular fa-clock mr-1"></i> Belum Presensi Masuk Hari Ini</span>`;
+        }
+
+        // Tombol 1: Presensi Masuk
+        if (hasMasuk) {
+          btnMasuk.disabled = true;
+          btnMasuk.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-emerald-950/40 text-emerald-400 border border-emerald-500/40 cursor-not-allowed opacity-90 shadow-lg flex items-center justify-center gap-2";
+          textMasuk.innerHTML = `<i class="fa-solid fa-lock mr-1 text-emerald-400"></i> Presensi Masuk Selesai (${hasMasuk.waktu_wit} WIT) • Terkunci`;
+        } else if (!detectedKantor) {
+          btnMasuk.disabled = true;
+          btnMasuk.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-slate-800 text-slate-500 cursor-not-allowed opacity-50 shadow-lg flex items-center justify-center gap-2";
+          textMasuk.innerHTML = `<i class="fa-solid fa-qrcode mr-1"></i> Pindai QR Kantor Terlebih Dahulu`;
+        } else if (isOutsideRadius) {
+          btnMasuk.disabled = true;
+          btnMasuk.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-red-950/40 text-red-400 border border-red-500/30 cursor-not-allowed opacity-60 shadow-lg flex items-center justify-center gap-2";
+          textMasuk.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-red-400"></i> Di Luar Radius Kantor (${currentGpsDistance}m) • Terkunci`;
+        } else {
+          btnMasuk.disabled = false;
+          btnMasuk.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-900/30 hover:from-emerald-500 hover:to-emerald-400 cursor-pointer flex items-center justify-center gap-2";
+          textMasuk.innerHTML = `<i class="fa-solid fa-right-to-bracket mr-1"></i> Presensi Masuk Sekarang (WIT)`;
+        }
+
+        // Tombol 2: Presensi Pulang
+        if (hasPulang) {
           btnPulang.disabled = true;
-          textPulang.textContent = "Presensi Pulang (Terkunci Sebelum Masuk)";
+          btnPulang.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-emerald-950/40 text-emerald-400 border border-emerald-500/40 cursor-not-allowed opacity-90 shadow-lg flex items-center justify-center gap-2";
+          textPulang.innerHTML = `<i class="fa-solid fa-lock mr-1 text-emerald-400"></i> Presensi Pulang Selesai (${hasPulang.waktu_wit} WIT) • Terkunci`;
+        } else if (!hasMasuk) {
+          btnPulang.disabled = true;
+          btnPulang.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-slate-800 text-slate-500 cursor-not-allowed opacity-50 shadow-lg flex items-center justify-center gap-2";
+          textPulang.innerHTML = `<i class="fa-solid fa-lock mr-1"></i> Presensi Pulang (Terkunci Sebelum Masuk)`;
+        } else if (!detectedKantor) {
+          btnPulang.disabled = true;
+          btnPulang.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-slate-800 text-slate-500 cursor-not-allowed opacity-50 shadow-lg flex items-center justify-center gap-2";
+          textPulang.innerHTML = `<i class="fa-solid fa-qrcode mr-1"></i> Pindai QR Kantor untuk Pulang`;
+        } else if (isOutsideRadius) {
+          btnPulang.disabled = true;
+          btnPulang.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-red-950/40 text-red-400 border border-red-500/30 cursor-not-allowed opacity-60 shadow-lg flex items-center justify-center gap-2";
+          textPulang.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-red-400"></i> Di Luar Radius Kantor (${currentGpsDistance}m) • Terkunci`;
+        } else if (!isAfterPulang && !allowEarly) {
+          btnPulang.disabled = true;
+          btnPulang.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-amber-950/40 text-amber-500 border border-amber-500/30 cursor-not-allowed opacity-60 shadow-lg flex items-center justify-center gap-2";
+          textPulang.innerHTML = `<i class="fa-regular fa-clock mr-1"></i> Belum Jam Kepulangan Kantor (16:00 WIT)`;
+        } else {
+          btnPulang.disabled = false;
+          btnPulang.className =
+            "w-full py-3.5 px-4 rounded-2xl font-bold text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-500 text-slate-950 shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:to-amber-400 cursor-pointer flex items-center justify-center gap-2";
+          textPulang.innerHTML = `<i class="fa-solid fa-right-from-bracket mr-1"></i> Presensi Pulang Sekarang (WIT)`;
         }
       }
 
@@ -1905,13 +2060,47 @@
         const maxRadius = detectedKantor.radius_meter || 100;
         if (currentGpsDistance > maxRadius) {
           alert(
-            `PRESENSI DITOLAK! Anda berada di luar radius lokasi kantor Diskominfo (${currentGpsDistance}m). Toleransi maksimal adalah ${maxRadius} meter.`,
+            `PRESENSI DITOLAK! Anda berada di luar radius lokasi kantor Diskominfo (${currentGpsDistance} meter). Batas radius toleransi resmi adalah ${maxRadius} meter.`,
           );
           return;
         }
 
         const today = getTodayStringWIT();
         const waktuWit = getNowTimeWIT();
+
+        // Validasi Anti-Pendobelan di Frontend
+        const existingToday = presensiList.filter(
+          (p) =>
+            p.email_pegawai.toLowerCase() === currentUser.email.toLowerCase() &&
+            p.tanggal.substring(0, 10) === today,
+        );
+        const sudahMasuk = existingToday.find((p) => p.tipe === "Masuk");
+        const sudahPulang = existingToday.find((p) => p.tipe === "Pulang");
+
+        if (tipe === "Masuk" && sudahMasuk) {
+          alert(
+            `PENDOBELAN DITOLAK!\nAnda sudah melakukan Presensi Masuk hari ini pada pukul ${sudahMasuk.waktu_wit} WIT. Sistem tidak mengizinkan absensi masuk berulang.`,
+          );
+          updatePegawaiTodayStatus();
+          return;
+        }
+
+        if (tipe === "Pulang") {
+          if (!sudahMasuk) {
+            alert(
+              `PRESENSI PULANG DITOLAK!\nAnda belum tercatat melakukan presensi Masuk hari ini. Wajib presensi masuk terlebih dahulu.`,
+            );
+            updatePegawaiTodayStatus();
+            return;
+          }
+          if (sudahPulang) {
+            alert(
+              `PENDOBELAN DITOLAK!\nAnda sudah melakukan Presensi Pulang hari ini pada pukul ${sudahPulang.waktu_wit} WIT. Presensi hari ini telah selesai.`,
+            );
+            updatePegawaiTodayStatus();
+            return;
+          }
+        }
 
         // Hitung Status Kehadiran (Tepat Waktu vs Terlambat)
         let statusKehadiran = "Tepat Waktu";
@@ -1954,7 +2143,7 @@
         }
 
         alert(
-          `Presensi ${tipe} berhasil dicatat!\nWaktu: ${waktuWit} WIT\nStatus: ${statusKehadiran}\nJarak GPS: ${currentGpsDistance}m`,
+          `Presensi ${tipe} Berhasil Dicatat!\n\n• Pegawai: ${currentUser.nama_lengkap}\n• Kantor: ${detectedKantor.nama_kantor}\n• Waktu: ${waktuWit} WIT\n• Status: ${statusKehadiran}\n• Jarak GPS: ${currentGpsDistance}m`,
         );
         updatePegawaiTodayStatus();
         renderPegawaiHistory();
@@ -2074,37 +2263,66 @@
         }
       }
 
+      // Handler unggah berkas foto QR Code
+      async function handleFileQrUpload(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        try {
+          if (!html5QrScanner) {
+            html5QrScanner = new Html5Qrcode("html5-scanner-viewport");
+          }
+          const decoded = await html5QrScanner.scanFile(file, true);
+          handleScanSuccess(decoded);
+        } catch (err) {
+          alert(
+            "Gagal membaca QR Code dari berkas foto. Pastikan foto QR Code kantor jelas, tidak blur, dan pencahayaan cukup.",
+          );
+        }
+      }
+
       function handleScanSuccess(decodedText) {
-        const clean = decodedText.trim();
+        const clean = (decodedText || "").trim();
         const matched = kantorList.find(
           (k) =>
             k.id_kantor.toLowerCase() === clean.toLowerCase() ||
-            k.qr_code_data.toLowerCase() === clean.toLowerCase(),
+            (k.qr_code_data &&
+              k.qr_code_data.toLowerCase() === clean.toLowerCase()),
         );
-        if (matched) {
-          detectedKantor = matched;
-        } else {
-          detectedKantor = {
-            id_kantor: clean,
-            nama_kantor: `Titik Kantor (${clean})`,
-            latitude: KUMURKEK_CENTER.lat,
-            longitude: KUMURKEK_CENTER.lng,
-            radius_meter: 100,
-          };
-        }
 
         const box = document.getElementById("box-detected-kantor");
-        if (box) {
-          box.className =
-            "p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 text-left space-y-1";
-          box.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">${detectedKantor.id_kantor}</span>
-            <span class="text-[10px] font-bold text-emerald-400">QR Valid</span>
-          </div>
-          <div class="text-sm font-bold text-white">${detectedKantor.nama_kantor}</div>
-          <div class="text-[11px] text-slate-400">${detectedKantor.alamat || "Kumurkek, Maybrat"}</div>
-        `;
+
+        if (matched) {
+          detectedKantor = matched;
+          if (box) {
+            box.className =
+              "p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 text-left space-y-1";
+            box.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">${detectedKantor.id_kantor}</span>
+              <span class="text-[10px] font-bold text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i> QR Kantor Valid</span>
+            </div>
+            <div class="text-sm font-bold text-white">${detectedKantor.nama_kantor}</div>
+            <div class="text-[11px] text-slate-400">${detectedKantor.alamat || "Kumurkek, Maybrat"}</div>
+            <div class="text-[10px] text-amber-400 pt-1">Batas Radius: ${detectedKantor.radius_meter || 100} meter</div>
+          `;
+          }
+        } else {
+          detectedKantor = null;
+          if (box) {
+            box.className =
+              "p-4 rounded-2xl bg-red-950/40 border border-red-500/40 text-left space-y-1";
+            box.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono text-red-400 bg-red-500/10 px-2 py-0.5 rounded">${clean}</span>
+              <span class="text-[10px] font-bold text-red-400"><i class="fa-solid fa-circle-xmark mr-1"></i> Tidak Terdaftar</span>
+            </div>
+            <div class="text-xs font-bold text-white">QR Code Tidak Dikenali</div>
+            <div class="text-[11px] text-red-300">QR Code ini bukan QR resmi titik kantor Diskominfo Kab. Maybrat yang terdaftar di database.</div>
+          `;
+          }
+          alert(
+            `QR CODE DITOLAK!\nKode "${clean}" tidak terdaftar sebagai titik kantor resmi di database Diskominfo Kabupaten Maybrat.`,
+          );
         }
 
         updateGpsDistance();
@@ -2112,19 +2330,11 @@
       }
 
       function renderPegawaiQuickKantorButtons() {
+        // Fitur pilih manual telah dihapus demi integritas data absensi resmi Diskominfo Maybrat
         const container = document.getElementById(
           "pegawai-quick-kantor-buttons",
         );
-        if (!container) return;
-        container.innerHTML = kantorList
-          .map(
-            (k) => `
-        <button onclick="handleScanSuccess('${k.id_kantor}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
-          <i class="fa-solid fa-building mr-1 text-amber-400"></i> ${k.nama_kantor.split("(")[0].trim()}
-        </button>
-      `,
-          )
-          .join("");
+        if (container) container.innerHTML = "";
       }
 
       function renderPegawaiHistory() {
@@ -2165,8 +2375,12 @@
         const tbody = document.getElementById("rekap-table-body");
         if (!tbody) return;
 
-        const filterDate =
+        const filterDateRaw =
           document.getElementById("filter-rekap-date")?.value || "";
+        // Normalisasi filter: potong 10 karakter pertama ("YYYY-MM-DD")
+        const filterDate = filterDateRaw
+          ? String(filterDateRaw).trim().substring(0, 10)
+          : "";
         const filterType =
           document.getElementById("filter-rekap-type")?.value || "ALL";
         const search = (
@@ -2174,7 +2388,11 @@
         ).toLowerCase();
 
         const filtered = presensiList.filter((p) => {
-          if (filterDate && p.tanggal !== filterDate) return false;
+          // Normalisasi tanggal item: potong hingga 10 karakter pertama (.substring(0, 10))
+          const rawDate = (p.tanggal || "").toString().trim();
+          const itemDate = rawDate.substring(0, 10);
+
+          if (filterDate && itemDate !== filterDate) return false;
           if (filterType !== "ALL" && p.tipe !== filterType) return false;
           if (search) {
             const matchNama = (p.nama_pegawai || "")
@@ -2183,14 +2401,19 @@
             const matchEmail = (p.email_pegawai || "")
               .toLowerCase()
               .includes(search);
-            if (!matchNama && !matchEmail) return false;
+            const matchKantor = (p.nama_kantor || p.id_kantor || "")
+              .toLowerCase()
+              .includes(search);
+            if (!matchNama && !matchEmail && !matchKantor) return false;
           }
           return true;
         });
 
-        // Update counters
-        const today = getTodayStringWIT();
-        const todayAll = presensiList.filter((p) => p.tanggal === today);
+        // Update counters harian WIT (.substring(0, 10))
+        const today = getTodayStringWIT().substring(0, 10);
+        const todayAll = presensiList.filter(
+          (p) => (p.tanggal || "").toString().trim().substring(0, 10) === today,
+        );
         document.getElementById("stat-today-total").textContent =
           todayAll.length;
         document.getElementById("stat-today-masuk").textContent =
@@ -2209,7 +2432,18 @@
           lateCount > 0 ? `${lateCount} terlambat` : "Semua tepat waktu";
 
         if (filtered.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-500">Tidak ada catatan presensi yang cocok.</td></tr>`;
+          tbody.innerHTML = `<tr><td colSpan="6" class="py-12 text-center text-slate-400">
+          <div class="max-w-md mx-auto space-y-1.5">
+            <div class="font-bold text-slate-300">Belum ada catatan presensi pada tanggal ${filterDate || "ini"}.</div>
+            <div class="text-[11px] text-slate-500">
+              ${
+                presensiList.length > 0
+                  ? `Total ${presensiList.length} data presensi tercatat di tanggal lain. Silakan ubah filter tanggal atau klik "Semua Tanggal".`
+                  : `Belum ada presensi yang terhubung. Pastikan URL Google Apps Script sudah benar, lalu klik tombol "Sinkron Google Sheets".`
+              }
+            </div>
+          </div>
+        </td></tr>`;
           return;
         }
 
