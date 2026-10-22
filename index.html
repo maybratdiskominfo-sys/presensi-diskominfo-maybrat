@@ -217,7 +217,7 @@
               class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"
             ></span>
             <span id="conn-status-text"
-              >Koneksi Database</span
+              >Koneksi Database: DATABASE_PRESENSI_DISKOMINFO_MAYBRAT</span
             >
           </div>
         </div>
@@ -311,14 +311,14 @@
               </div>
             </button>
             <button
-              onclick="quickFillLogin('anjellofanataf@gmail.com', '123456')"
+              onclick="quickFillLogin('yohanes.way@maybratkab.go.id', '123456')"
               class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-left border border-slate-700"
             >
               <div class="font-semibold text-blue-400">
                 <i class="fa-solid fa-user mr-1"></i> Pegawai
               </div>
               <div class="text-slate-400 truncate">
-                anjellofanataf@gmail.com
+                yohanes.way@maybratkab.go.id
               </div>
             </button>
           </div>
@@ -746,28 +746,48 @@
                 onsubmit="handleSavePegawai(event)"
                 class="space-y-3 text-xs"
               >
+                <div
+                  class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-[11px] flex items-center gap-2"
+                >
+                  <span
+                    class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+                  ></span>
+                  <span
+                    >ID Pegawai dibuat <b>Otomatis</b> oleh sistem (<code
+                      class="text-amber-400 font-mono"
+                      >PEG-xxxx</code
+                    >)</span
+                  >
+                </div>
                 <div>
-                  <label class="block text-slate-400 mb-1">ID Pegawai</label>
+                  <label class="block text-slate-400 mb-1 font-semibold"
+                    >NIP Pegawai (18 Digit)</label
+                  >
                   <input
                     type="text"
-                    id="pegawai-id"
-                    placeholder="PEG-005"
+                    id="pegawai-nip"
+                    placeholder="Contoh: 198805122010011002"
                     required
-                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono"
+                    maxlength="18"
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono text-xs"
                   />
                 </div>
                 <div>
-                  <label class="block text-slate-400 mb-1">Nama Lengkap</label>
+                  <label class="block text-slate-400 mb-1 font-semibold"
+                    >Nama Lengkap & Gelar</label
+                  >
                   <input
                     type="text"
                     id="pegawai-nama"
-                    placeholder="Nama & Gelar"
+                    placeholder="Contoh: Yohanes Way, S.Kom"
                     required
                     class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
                   />
                 </div>
                 <div>
-                  <label class="block text-slate-400 mb-1">Email Pegawai</label>
+                  <label class="block text-slate-400 mb-1 font-semibold"
+                    >Email Pegawai (Kunci Akun)</label
+                  >
                   <input
                     type="email"
                     id="pegawai-email"
@@ -778,7 +798,9 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
-                    <label class="block text-slate-400 mb-1">Role</label>
+                    <label class="block text-slate-400 mb-1 font-semibold"
+                      >Role</label
+                    >
                     <select
                       id="pegawai-role"
                       class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
@@ -788,7 +810,9 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-slate-400 mb-1">Status</label>
+                    <label class="block text-slate-400 mb-1 font-semibold"
+                      >Status</label
+                    >
                     <select
                       id="pegawai-status"
                       class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
@@ -799,7 +823,9 @@
                   </div>
                 </div>
                 <div>
-                  <label class="block text-slate-400 mb-1">Jabatan</label>
+                  <label class="block text-slate-400 mb-1 font-semibold"
+                    >Jabatan</label
+                  >
                   <input
                     type="text"
                     id="pegawai-jabatan"
@@ -809,7 +835,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-slate-400 mb-1"
+                  <label class="block text-slate-400 mb-1 font-semibold"
                     >PIN Login (6 Digit)</label
                   >
                   <input
@@ -823,7 +849,7 @@
                 </div>
                 <button
                   type="submit"
-                  class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all"
+                  class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md"
                 >
                   Simpan Pegawai ke Sheets
                 </button>
@@ -839,8 +865,10 @@
                     class="bg-slate-950 text-slate-400 uppercase font-bold tracking-wider text-[10px] border-b border-slate-800"
                   >
                     <tr>
-                      <th class="py-3 px-4">ID & Nama</th>
-                      <th class="py-3 px-4">Email</th>
+                      <th class="py-3 px-4">ID</th>
+                      <th class="py-3 px-4">NIP Pegawai</th>
+                      <th class="py-3 px-4">Nama Pegawai</th>
+                      <th class="py-3 px-4">Email Kedinasan</th>
                       <th class="py-3 px-4">Jabatan</th>
                       <th class="py-3 px-4">Role</th>
                       <th class="py-3 px-4">Status</th>
@@ -1374,10 +1402,37 @@
       let pollIntervalSeconds = 30;
       let pollCountdown = 30;
 
-      // Seed Data Pegawai
+      // Seed Data Kantor
+      const SEED_KANTOR = [
+        {
+          id_kantor: "KTR-DISKOMINFO-01",
+          nama_kantor: "Kantor Diskominfo Kab. Maybrat (Kumurkek)",
+          alamat:
+            "Jl. Poros Kumurkek - Ayamaru, Kompleks Kantor Bupati Maybrat",
+          latitude: -0.5512,
+          longitude: 132.4512,
+          radius_meter: 100,
+          qr_code_data: "KTR-DISKOMINFO-01",
+          created_at: new Date().toISOString(),
+        },
+        {
+          id_kantor: "KTR-DISKOMINFO-02",
+          nama_kantor: "Media Center & Layanan PPID",
+          alamat: "Gedung Media Center Diskominfo Maybrat, Kumurkek",
+          latitude: -0.5518,
+          longitude: 132.4508,
+          radius_meter: 100,
+          qr_code_data: "KTR-DISKOMINFO-02",
+          created_at: new Date().toISOString(),
+        },
+      ];
+
+      // Seed Data Pegawai (Format 9 Kolom dengan NIP Pegawai)
       const SEED_PEGAWAI = [
         {
-          id_pegawai: "PEG-001",
+          id_pegawai: "PEG-1001",
+          nip_pegawai: "198805122010011002",
+          NIP_Pegawai: "198805122010011002",
           nama_lengkap: "Admin Diskominfo Maybrat",
           email: "maybratdiskominfo@gmail.com",
           role: "Admin",
@@ -1386,11 +1441,24 @@
           pin: "123456",
         },
         {
-          id_pegawai: "PEG-002",
-          nama_lengkap: "ANJELLO FANATAF S.Kom",
-          email: "anjellofanataf2026@gmail.com",
+          id_pegawai: "PEG-1002",
+          nip_pegawai: "199203152015031004",
+          NIP_Pegawai: "199203152015031004",
+          nama_lengkap: "Yohanes B. Way, S.Kom",
+          email: "yohanes.way@maybratkab.go.id",
           role: "Pegawai",
           jabatan: "Pranata Komputer Ahli Muda",
+          status: "Aktif",
+          pin: "123456",
+        },
+        {
+          id_pegawai: "PEG-1003",
+          nip_pegawai: "199507202020122008",
+          NIP_Pegawai: "199507202020122008",
+          nama_lengkap: "Maria Kocu, S.Sos",
+          email: "maria.kocu@maybratkab.go.id",
+          role: "Pegawai",
+          jabatan: "Pranata Humas Ahli Pertama",
           status: "Aktif",
           pin: "123456",
         },
@@ -1830,8 +1898,9 @@
             user.nama_lengkap;
           document.getElementById("pegawai-badge-jabatan").textContent =
             `${user.jabatan} • ${user.email}`;
+          const nip = user.nip_pegawai || user.NIP_Pegawai;
           document.getElementById("pegawai-badge-id").textContent =
-            user.id_pegawai;
+            `${user.id_pegawai}${nip ? " • NIP: " + nip : ""}`;
           renderPegawaiQuickKantorButtons();
           renderPegawaiHistory();
           renderPegawaiIzinList();
@@ -2457,7 +2526,19 @@
           </td>
           <td class="py-3 px-4">
             <div class="font-bold text-white">${row.nama_pegawai}</div>
-            <div class="text-[10px] text-slate-400 font-mono">${row.email_pegawai}</div>
+            <div class="text-[10px] text-slate-400 font-mono">
+              ${(() => {
+                const emp = pegawaiList.find(
+                  (p) =>
+                    p.email.toLowerCase() ===
+                    (row.email_pegawai || "").toLowerCase(),
+                );
+                const nip = emp ? emp.nip_pegawai || emp.NIP_Pegawai : null;
+                return nip
+                  ? `<span class="text-amber-400 font-semibold mr-1">NIP: ${nip} •</span>`
+                  : "";
+              })()}${row.email_pegawai}
+            </div>
           </td>
           <td class="py-3 px-4">
             <div>${row.tanggal}</div>
@@ -2626,10 +2707,9 @@
           .map(
             (row) => `
         <tr class="hover:bg-slate-800/40">
-          <td class="py-3 px-4">
-            <div class="font-bold text-white">${row.nama_lengkap}</div>
-            <div class="text-[10px] text-slate-500 font-mono">${row.id_pegawai}</div>
-          </td>
+          <td class="py-3 px-4 font-mono text-[11px] text-blue-400 font-bold">${row.id_pegawai}</td>
+          <td class="py-3 px-4 font-mono text-[11px] text-amber-400 font-bold">${row.nip_pegawai || row.NIP_Pegawai || "-"}</td>
+          <td class="py-3 px-4 font-bold text-white">${row.nama_lengkap}</td>
           <td class="py-3 px-4 font-mono text-slate-300">${row.email}</td>
           <td class="py-3 px-4 text-slate-300">${row.jabatan}</td>
           <td class="py-3 px-4">
@@ -2685,7 +2765,7 @@
 
       async function handleSavePegawai(e) {
         e.preventDefault();
-        const id = document.getElementById("pegawai-id").value.trim();
+        const nip = (document.getElementById("pegawai-nip").value || "").trim();
         const nama = document.getElementById("pegawai-nama").value.trim();
         const email = document
           .getElementById("pegawai-email")
@@ -2696,8 +2776,30 @@
         const jabatan = document.getElementById("pegawai-jabatan").value.trim();
         const pin = document.getElementById("pegawai-pin").value.trim();
 
+        const idx = pegawaiList.findIndex(
+          (p) => p.email.toLowerCase() === email,
+        );
+
+        // Otomatis generate ID Pegawai oleh sistem (PEG-xxxx) jika pegawai baru
+        let id = "";
+        if (idx >= 0) {
+          id = pegawaiList[idx].id_pegawai;
+        } else {
+          let maxNum = 1000;
+          pegawaiList.forEach((p) => {
+            const m = (p.id_pegawai || "").match(/^PEG-(\d+)$/i);
+            if (m) {
+              const n = parseInt(m[1], 10);
+              if (!isNaN(n) && n > maxNum) maxNum = n;
+            }
+          });
+          id = "PEG-" + (maxNum + 1);
+        }
+
         const newPeg = {
           id_pegawai: id,
+          nip_pegawai: nip || "-",
+          NIP_Pegawai: nip || "-",
           nama_lengkap: nama,
           email: email,
           role: role,
@@ -2706,9 +2808,6 @@
           pin: pin,
         };
 
-        const idx = pegawaiList.findIndex(
-          (p) => p.email.toLowerCase() === email,
-        );
         if (idx >= 0) pegawaiList[idx] = newPeg;
         else pegawaiList.push(newPeg);
 
@@ -2716,11 +2815,15 @@
 
         if (API_URL && API_URL !== "URL_WEB_APP_ANDA") {
           try {
-            requestGAS("savePegawai", newPeg, "POST");
+            const res = await requestGAS("savePegawai", newPeg, "POST");
+            if (res && res.data && res.data.id_pegawai) {
+              newPeg.id_pegawai = res.data.id_pegawai;
+              setStoredData("MAYBRAT_PEGAWAI", pegawaiList);
+            }
           } catch (e) {}
         }
 
-        alert("Data pegawai berhasil disimpan!");
+        alert(`Data pegawai ${nama} (${newPeg.id_pegawai}) berhasil disimpan!`);
         renderPegawaiTable();
         document.getElementById("form-pegawai").reset();
       }
